@@ -1,22 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table } from 'reactstrap'
+import { Table, Button } from 'reactstrap'
 import { useFetchAsync } from 'hooks'
-
+import { useHistory } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import BlockUi from 'react-block-ui';
 import 'react-block-ui/style.css';
 
-const TableAsync = ({ query, header, body }) => {
-
+const TableAsync = ({ query, header, body, location, history }) => {
     const { data, loading, error } = useFetchAsync(query)
 
-    const goEdit = (row) => {
-        //history.push(`${row.id}`)
+    const goEdit = (row = { id : 0 }) => {
+        history.push(`${location.pathname}/${row.id}`)
     }
 
     return (
         <BlockUi tag="div" blocking={loading || error} message={error ? error : ''}>
+            <div className="text-right">
+                <Button size="sm" color="acent" onClick={() => goEdit()}>
+                    Agregar <FontAwesomeIcon icon={faPlus} />
+                </Button>
+            </div>
             <div style={{padingTop: 30, minHeight: 200}}>
+                <br/>
                 <Table striped hover>
                     <thead>
                         { header.map((rowHead, i) => 

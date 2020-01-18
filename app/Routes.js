@@ -18,7 +18,8 @@ var routes = [
     name: "Crear/Editar Nodo",
     icon: "fa fa-node",
     component: Node,
-    layout: "/admin"
+    layout: "/admin",
+    hidden: true
   },
   {
     path: "/nodos",
@@ -44,11 +45,12 @@ var routes = [
     exact: true
   },
   {
-    path: "/psicina",
+    path: "/psicinas/:id",
     name: "Crear/Editar Psicina",
     icon: "fa fa-node",
     component: Pool,
-    layout: "/admin"
+    layout: "/admin",
+    hidden: true
   },
 ];
 export default routes;

@@ -7,18 +7,20 @@ export default function useFetchAsync({ model, ...query }) {
     const [error, setError] = useState('')
 
     useEffect(() => {
-        setLoading(true)
+        if(query){
+            setLoading(true)
 
-        models[model].findAll(query)
-        .then(result => {
-            setData(result)
-        })
-        .catch(function (thrown) {
-            setError("Algo fallo al consultar: " + thrown)
-        })
-        .finally(() => {
-            setLoading(false)
-        })
+            models[model].findAll(query)
+            .then(result => {
+                setData(result)
+            })
+            .catch(function (thrown) {
+                setError("Algo fallo al consultar: " + thrown)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+        }
     }, []);
 
     return {

@@ -9,7 +9,7 @@ import {
 } from "reactstrap";
 import { TableAsync } from 'components/Catalog'
 
-const Ssh = () => {
+const Ssh = ({ history, location }) => {
     return (
         <>
             <Container fluid>
@@ -30,6 +30,8 @@ const Ssh = () => {
                                     body={[
                                         'address', 'num', 'status'
                                     ]}
+                                    history={history}
+                                    location={location}
                                 />
                             </CardBody>
                         </Card>
