@@ -22,7 +22,7 @@ const HistoryNodes = (props) => {
                     <Col className="mb-5 mb-xl-0">
                         <Card className="shadow" style={{minHeight: 300}}>
                             <CardHeader className="bg-secondary">
-                                Cread/Editar Nodo
+                                Crear/Editar Nodo
                             </CardHeader>
                             <CardBody>
                                 {/*<Scheduler locale={'es-ES'} data={dataCalendar}>

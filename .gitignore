@@ -52,3 +52,9 @@ main.js.map
 
 .idea
 npm-debug.log.*
+
+package-lock.json
+*.lock
+yarn.lock
+app/yarn.lock
+.vscode

@@ -17,7 +17,7 @@ const Pools = (props) => {
                     <Col className="mb-5 mb-xl-0">
                         <Card className="shadow" style={{minHeight: 300}}>
                             <CardHeader className="bg-secondary">
-                                Listado de psicinas
+                                Listado de piscinas
                             </CardHeader>
                             <CardBody>
                                 <TableAsync

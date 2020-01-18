@@ -10,7 +10,7 @@ import {
   Input,
   CardBody,
   Label,
-  Button 
+  Button
 } from "reactstrap";
 import models from 'models'
 import EditPage from 'components/Catalog/EditPage'
@@ -24,15 +24,15 @@ const Pool = ({ match, history }) => {
       [e.target.name] : e.target.value
     })
   }
-  
+
   return (
-    <EditPage 
-      model="pool" 
-      route="/admin/psicinas" 
+    <EditPage
+      model="pool"
+      route="/admin/piscinas"
       title="Crear/Editar Psicina"
-      dataForm={dataForm} 
-      setDataForm={setDataForm} 
-      match={match} 
+      dataForm={dataForm}
+      setDataForm={setDataForm}
+      match={match}
       history={history}
     >
       <Form>
