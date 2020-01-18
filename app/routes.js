@@ -37,16 +37,16 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/psicinas",
-    name: "Psicinas",
+    path: "/piscinas",
+    name: "Piscinas",
     icon: "fa fa-node",
     component: Pools,
     layout: "/admin",
     exact: true
   },
   {
-    path: "/psicinas/:id",
-    name: "Crear/Editar Psicina",
+    path: "/piscinas/:id",
+    name: "Crear/Editar Piscina",
     icon: "fa fa-node",
     component: Pool,
     layout: "/admin",
