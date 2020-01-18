@@ -1,7 +1,6 @@
-const app = window.require('electron').remote;
-const Client = app.require('ssh2').Client;
-const fs = app.require('fs')
-const models = require('models')
+import {Client} from 'ssh2'
+import fs from 'fs'
+import models from 'models'
 
 export function connectToRasberry(){
     return new Promise(async (resolve, reject) => {
