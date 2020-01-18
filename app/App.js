@@ -10,16 +10,16 @@ import AdminLayout from "layouts/Admin.jsx";
 import AuthLayout from "layouts/Auth.jsx";
 import { hot } from "react-hot-loader/root";
 
-const theme = createMuiTheme({ palette: { type: "light" } });
+const theme = createMuiTheme();
 
 const App = () => {
     return (
         <MuiThemeProvider theme={theme}>
             <BrowserRouter>
                 <Switch>
-                <Route path="/admin" render={props => <AdminLayout {...props} />} />
-                <Route path="/auth" render={props => <AuthLayout {...props} />} />
-                <Redirect from="/" to="/admin/index" />
+                    <Route path="/admin" render={props => <AdminLayout {...props} />} />
+                    <Route path="/auth" render={props => <AuthLayout {...props} />} />
+                    <Redirect from="/" to="/admin/index" />
                 </Switch>
             </BrowserRouter>
         </MuiThemeProvider>

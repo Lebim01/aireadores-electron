@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { ViewState } from "@devexpress/dx-react-scheduler";
-import {
-    Scheduler,
-    WeekView,
-    Appointments,
-} from "@devexpress/dx-react-scheduler-material-ui";
 import { turnOnNode } from 'helpers/connect-ssh'
 import data from './calendar-data'
 import moment from 'moment';
@@ -14,6 +8,10 @@ import Swal from 'sweetalert2';
 import models from 'models'
 import EditPage from 'components/Catalog/EditPage'
 import SelectAsync from 'components/SelectAsync'
+
+import FullCalendar from '@fullcalendar/react'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction';
 
 const useTime = () => {
     const [time, setTime] = useState(moment())
@@ -58,6 +56,20 @@ const Node = ({ match, history }) => {
         setDataForm({
             ...dataForm,
             [e.target.name] : e.target.value
+        })
+    }
+
+    const confirmSchedule = (data) => {
+        Swal.fire({
+            title : 'Programar horario de encendido',
+            html : `Encendido: ${moment(data.start).format('dddd, HH:mm:ss')} <br/> Apagado: ${moment(data.end).format('dddd, HH:mm:ss')}`,
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+        })
+        .then(result => {
+            if(result.value){
+                
+            }
         })
     }
 
@@ -164,11 +176,29 @@ const Node = ({ match, history }) => {
 
             <Row>
                 <Col xs={8} lg={10}>
-                    {/*<Scheduler data={data} locale={'es-ES'}>
-                        <ViewState currentDate="2020-06-28" />
-                        <WeekView startDayHour={9} endDayHour={19} />
-                        <Appointments />
-                    </Scheduler>*/}
+                    <FullCalendar 
+                        defaultView="timeGridWeek" 
+                        plugins={[ timeGridPlugin, interactionPlugin ]} 
+                        locale={'es-ES'}
+                        nowIndicator
+
+                        allDaySlot={false}
+                        slotLabelFormat={{
+                            hour: 'numeric',
+                            minute: '2-digit',
+                        }}
+
+                        header={false}
+
+                        columnHeaderFormat={{
+                            weekday: 'long'
+                        }}
+
+                        selectable
+                        select={(data) => {
+                            confirmSchedule(data)
+                        }}
+                    />
                 </Col>
                 { dataForm.id &&
                     <Col xs={4} lg={2} className="text-center">
