@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
 import { ViewState } from "@devexpress/dx-react-scheduler";
-/*import {
+import {
     Scheduler,
     WeekView,
     Appointments,
-} from "@devexpress/dx-react-scheduler-material-ui";*/
+} from "@devexpress/dx-react-scheduler-material-ui";
 import { turnOnNode } from 'helpers/connect-ssh'
 import data from './calendar-data'
 import moment from 'moment';
