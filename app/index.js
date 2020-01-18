@@ -1,17 +1,20 @@
-import React, { Fragment } from 'react';
-import { render } from 'react-dom';
-import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
-import Root from './containers/Root';
-import { configureStore, history } from './store/configureStore';
-import './app.global.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-const store = configureStore();
+import "assets/vendor/nucleo/css/nucleo.css";
+import "assets/vendor/@fortawesome/fontawesome-free/css/all.min.css";
+import "assets/scss/argon-dashboard-react.scss";
+import AdminLayout from "layouts/Admin.jsx";
+import AuthLayout from "layouts/Auth.jsx";
 
-const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
-
-render(
-  <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('root')
+ReactDOM.render(
+  <BrowserRouter>
+    <Switch>
+      <Route path="/admin" render={props => <AdminLayout {...props} />} />
+      <Route path="/auth" render={props => <AuthLayout {...props} />} />
+      <Redirect from="/" to="/admin/index" />
+    </Switch>
+  </BrowserRouter>,
+  document.getElementById("root")
 );

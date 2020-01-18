@@ -29,6 +29,7 @@ const manifest = path.resolve(dll, 'renderer.json');
 const requiredByDLLConfig = module.parent.filename.includes(
   'webpack.config.renderer.dev.dll'
 );
+const srcPath = path.join(__dirname, '..', 'app');
 
 /**
  * Warn if the DLL is not built
@@ -202,6 +203,7 @@ export default merge.smart(baseConfig, {
     ]
   },
   resolve: {
+    modules: [path.resolve(srcPath), 'node_modules'],
     alias: {
       'react-dom': '@hot-loader/react-dom'
     }
