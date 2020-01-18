@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap'
-import { ViewState } from '@devexpress/dx-react-scheduler';
+/*import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   MonthView,
@@ -11,7 +11,7 @@ import {
   Appointments,
   TodayButton,
   ViewSwitcher
-} from '@devexpress/dx-react-scheduler-material-ui';
+} from '@devexpress/dx-react-scheduler-material-ui';*/
 import dataCalendar from './calendar-data'
 
 const HistoryNodes = (props) => {
@@ -25,7 +25,7 @@ const HistoryNodes = (props) => {
                                 Cread/Editar Nodo
                             </CardHeader>
                             <CardBody>
-                                <Scheduler locale={'es-ES'} data={dataCalendar}>
+                                {/*<Scheduler locale={'es-ES'} data={dataCalendar}>
                                     <ViewState defaultCurrentViewName="Semana" currentDate="2020-06-28" />
                                     <DayView name="Dia" />
                                     <WeekView name="Semana" />
@@ -35,7 +35,7 @@ const HistoryNodes = (props) => {
                                     <DateNavigator />
                                     <TodayButton />
                                     <Appointments />
-                                </Scheduler>
+                                </Scheduler>*/}
                             </CardBody>
                         </Card>
                     </Col>

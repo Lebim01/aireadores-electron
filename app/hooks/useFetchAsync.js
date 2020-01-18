@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const models = require('models')
+import models from 'models'
 
 export default function useFetchAsync({ model, ...query }) {
     const [loading, setLoading] = useState(false)

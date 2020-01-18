@@ -38,6 +38,8 @@ export default {
     modules: [path.join(__dirname, '..', 'app'), 'node_modules']
   },
 
+  
+
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production'

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { ViewState } from "@devexpress/dx-react-scheduler";
+/*import { ViewState } from "@devexpress/dx-react-scheduler";
 import {
     Scheduler,
     WeekView,
     Appointments,
-} from "@devexpress/dx-react-scheduler-material-ui";
+} from "@devexpress/dx-react-scheduler-material-ui";*/
 import { turnOnNode } from 'helpers/connect-ssh'
 import data from './calendar-data'
 import moment from 'moment';
@@ -186,11 +186,11 @@ const Node = () => {
 
                                 <Row>
                                     <Col xs={8} lg={10}>
-                                        <Scheduler data={data} locale={'es-ES'}>
+                                        {/*<Scheduler data={data} locale={'es-ES'}>
                                             <ViewState currentDate="2020-06-28" />
                                             <WeekView startDayHour={9} endDayHour={19} />
                                             <Appointments />
-                                        </Scheduler>
+                                        </Scheduler>*/}
                                     </Col>
                                     <Col xs={4} lg={2} className="text-center">
                                         <Row>
