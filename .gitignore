@@ -54,5 +54,7 @@ main.js.map
 npm-debug.log.*
 
 package-lock.json
-.lock
+*.lock
+yarn.lock
+app/yarn.lock
 .vscode
