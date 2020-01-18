@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/@fortawesome/fontawesome-free/css/all.min.css";
@@ -25,15 +26,19 @@ models.sequelize.sync().then(function() {
 	console.error(err, "Something went wrong, database is not connected!");
 });
 
+const theme = createMuiTheme({ palette: { type: "light" } });
+
 ReactDOM.render(
   <ReactHotAppContainer>
-    <BrowserRouter>
-      <Switch>
-        <Route path="/admin" render={props => <AdminLayout {...props} />} />
-        <Route path="/auth" render={props => <AuthLayout {...props} />} />
-        <Redirect from="/" to="/admin/index" />
-      </Switch>
-    </BrowserRouter>
+    <MuiThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/admin" render={props => <AdminLayout {...props} />} />
+          <Route path="/auth" render={props => <AuthLayout {...props} />} />
+          <Redirect from="/" to="/admin/index" />
+        </Switch>
+      </BrowserRouter>
+    </MuiThemeProvider>
   </ReactHotAppContainer>,
   document.getElementById("root")
 );

@@ -1,3 +1,6 @@
+# Files generated
+database.sqlite
+
 # Logs
 logs
 *.log
