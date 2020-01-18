@@ -41,12 +41,12 @@ module.exports = (sequelize, Sequelize) => {
 	});
 
 	Node.associate = (models) => {
-		Node.hasMany(models.pool, {
-			foreignKey: 'pool_id'
-        });
         Node.hasMany(models.device, {
 			foreignKey: 'device_id'
-		});
+        });
+        Node.belongsTo(models.pool, { 
+            foreignKey: 'pool_id' 
+        })
 	}
 
 	return Node;

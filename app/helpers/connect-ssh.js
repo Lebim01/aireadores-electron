@@ -42,7 +42,7 @@ export function turnOnNode(node_id){
         try {
             const conn = await connectToRasberry()
 
-            const nodeInstance = await models.node.findOne({ where : { id : node_id } })
+            const nodeInstance = await models.node.findByPk(node_id)
             
             if(!nodeInstance) throw new Error('Nodo no encontrado')
 
@@ -66,6 +66,7 @@ export function turnOnNode(node_id){
                     throw err;
           
                 stream.on('data', function(data) {
+                    console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
                         resolve()
                     }else{

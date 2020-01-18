@@ -5,7 +5,7 @@ import models from 'models'
 import App from './App'
 
 // Sync database with Sequelize models
-models.sequelize.sync().then(function() {
+models.sequelize.sync({ force: true }).then(function() {
 	if (process.env.NODE_ENV !== "test") {
 		console.log('Database connected!');
   }

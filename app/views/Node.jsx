@@ -53,8 +53,6 @@ const Node = ({ match, history }) => {
     const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : '' })
     const [mode, setMode] = useState('programar')
     const time = useTime()
-
-    console.log(dataForm)
     
     const onChange = (e) => {
         setDataForm({
@@ -121,7 +119,7 @@ const Node = ({ match, history }) => {
                         <FormGroup row>
                             <Label sm={3}>Piscina</Label>
                             <Col sm={9} lg={6}>
-                                <SelectAsync name="pool_id" query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={onchange} value={dataForm.pool_id}>
+                                <SelectAsync name="pool_id" query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={onChange} value={dataForm.pool_id}>
                                     <option>Seleccione</option>
                                 </SelectAsync>
                             </Col>
@@ -172,50 +170,52 @@ const Node = ({ match, history }) => {
                         <Appointments />
                     </Scheduler>*/}
                 </Col>
-                <Col xs={4} lg={2} className="text-center">
-                    <Row>
-                        <Col xs={12}>
-                            <Label>{time.format('D [de] MMMM [de] YYYY')}</Label>
-                        </Col>
-                        <Col xs={12}>
-                            <Label>{time.format('dddd, HH:mm')}</Label>
-                        </Col>
-                        <Col xs={12}>
-                            <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => setMode('programar')}>
-                                Programar
-                            </Button>
-                        </Col>
-                        <Col xs={12}>
-                            <br/>
-                            <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => setMode('inabilitar')}>
-                                Inhabilitar
-                            </Button>
-                        </Col>
-                        { mode === 'inabilitar' &&
+                { dataForm.id &&
+                    <Col xs={4} lg={2} className="text-center">
+                        <Row>
                             <Col xs={12}>
-                                <hr />
-                                <fieldset>
-                                    <legend>Manual</legend>
-                                    <Row>
-                                        <Col xs={12}>
-                                            <Button block onClick={() => connectToNode(1)}>
-                                                Encender
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={12}>
-                                            <br/>
-                                            <Button block>
-                                                Apagar
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </fieldset>
+                                <Label>{time.format('D [de] MMMM [de] YYYY')}</Label>
                             </Col>
-                        }
-                    </Row>
-                </Col>
+                            <Col xs={12}>
+                                <Label>{time.format('dddd, HH:mm')}</Label>
+                            </Col>
+                            <Col xs={12}>
+                                <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => setMode('programar')}>
+                                    Programar
+                                </Button>
+                            </Col>
+                            <Col xs={12}>
+                                <br/>
+                                <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => setMode('inabilitar')}>
+                                    Inhabilitar
+                                </Button>
+                            </Col>
+                            { mode === 'inabilitar' &&
+                                <Col xs={12}>
+                                    <hr />
+                                    <fieldset>
+                                        <legend>Manual</legend>
+                                        <Row>
+                                            <Col xs={12}>
+                                                <Button block onClick={() => connectToNode(dataForm.id)}>
+                                                    Encender
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col xs={12}>
+                                                <br/>
+                                                <Button block>
+                                                    Apagar
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                    </fieldset>
+                                </Col>
+                            }
+                        </Row>
+                    </Col>
+                }
             </Row>
         </EditPage>
     )

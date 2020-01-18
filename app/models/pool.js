@@ -10,5 +10,11 @@ module.exports = (sequelize, Sequelize) => {
 		tableName: 'pool'
 	});
 
+	Pool.associate = (models) => {
+		Pool.hasMany(models.node, {
+			foreignKey: 'pool_id'
+        });
+	}
+
 	return Pool;
 }
