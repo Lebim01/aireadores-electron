@@ -208,11 +208,7 @@ const Node = ({ match, history }) => {
                         <FormGroup row>
                             <Label sm={3}>Estado</Label>
                             <Col sm={9} lg={6}>
-                                <Input type="select" name="status" onChange={onChange} value={dataForm.status}>
-                                    <option value="">Seleccione</option>
-                                    <option value="encendido">Encendido</option>
-                                    <option value="apagado">Apagado</option>
-                                </Input>
+                                <label>{dataForm.status}</label>
                             </Col>
                         </FormGroup>
                     </Col>
