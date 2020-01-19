@@ -7,13 +7,6 @@ import HistoryNodes from "views/HistoryNodes"
 
 var routes = [
   {
-    path: "/configuracion",
-    name: "Configuración",
-    icon: "fa fa-key",
-    component: Ssh,
-    layout: "/admin"
-  },
-  {
     path: "/nodos/:id",
     name: "Crear/Editar Nodo",
     icon: "fa fa-node",
@@ -30,13 +23,6 @@ var routes = [
     exact: true
   },
   {
-    path: "/historial-nodos",
-    name: "Historial de nodos",
-    icon: "fa fa-node",
-    component: HistoryNodes,
-    layout: "/admin"
-  },
-  {
     path: "/piscinas",
     name: "Piscinas",
     icon: "fa fa-node",
@@ -51,6 +37,20 @@ var routes = [
     component: Pool,
     layout: "/admin",
     hidden: true
+  },
+  {
+    path: "/historial-nodos",
+    name: "Historial de nodos",
+    icon: "fa fa-node",
+    component: HistoryNodes,
+    layout: "/admin"
+  },
+  {
+    path: "/configuracion",
+    name: "Configuración",
+    icon: "fa fa-key",
+    component: Ssh,
+    layout: "/admin"
   },
 ];
 export default routes;
