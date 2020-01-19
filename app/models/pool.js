@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             notEmpty: true,
 			allowNull: false,
-			comment: "Nombre de la psicina"
+			comment: "Nombre de la piscina"
         }
 	}, {
 		tableName: 'pool'
@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
 
 	Pool.associate = (models) => {
 		Pool.hasMany(models.node, {
-			foreignKey: 'pool_id'
+      foreignKey: 'pool_id'
         });
 	}
 
