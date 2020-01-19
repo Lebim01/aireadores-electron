@@ -5,7 +5,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import models from 'models'
 import Swal from 'sweetalert2'
 
-const EditPage = ({ children, match, history, route, model, title, dataForm, setDataForm }) => {
+const EditPage = ({ children, match, history, route, model, title, dataForm, setDataForm, ...props }) => {
 
     useEffect(() => {
         async function getDataForm(id){
@@ -26,16 +26,22 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
     const save = async () => {
         try {
             const { id, ...fieldsToCreate } = dataForm
+
+            let instance
             if(id){
-                const instance = await models[model].findByPk(id)
+                instance = await models[model].findByPk(id)
                 Object.assign(instance, fieldsToCreate)
                 const valid = await instance.validate()
                 await instance.save()
             }else{
-                const instance = models[model].build(fieldsToCreate)
+                instance = models[model].build(fieldsToCreate)
                 await instance.validate()
                 await instance.save()
             }
+
+            if(props.onSave)
+                await props.onSave(instance)
+
             Swal.fire('Guardar', 'Guardado correctamente', 'success')
             goBack()
         }catch(err){

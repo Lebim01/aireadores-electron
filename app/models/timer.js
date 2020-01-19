@@ -1,10 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
 	const Timer = sequelize.define('timer', {
         start_day: {
-            type: Sequelize.STRING(10),
+            type: Sequelize.INTEGER,
             notEmpty: true,
 			allowNull: false,
-			comment: "YYYY-MM-DD"
+			comment: "day of week"
         },
         start_time: {
             type: Sequelize.STRING(8),
@@ -13,10 +13,10 @@ module.exports = (sequelize, Sequelize) => {
 			comment: "HH:mm:ss"
         },
         end_day : {
-            type: Sequelize.STRING(10),
+            type: Sequelize.INTEGER,
             notEmpty: true,
 			allowNull: false,
-			comment: "YYYY-MM-DD"
+			comment: "day of week"
         },
         end_time : {
             type: Sequelize.STRING(8),
@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
 	});
 
 	Timer.associate = (models) => {
-		Timer.hasMany(models.node, {
+		Timer.belongsTo(models.node, {
 			foreignKey: 'node_id'
         });
 	}

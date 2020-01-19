@@ -50,7 +50,12 @@ const connectToNode = (node_id) => {
 const Node = ({ match, history }) => {
     const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : '' })
     const [mode, setMode] = useState('programar')
+    const [timers, setTimers] = useState([])
     const time = useTime()
+
+    useEffect(() => {
+        getTimers()
+    }, [])
     
     const onChange = (e) => {
         setDataForm({
@@ -68,9 +73,55 @@ const Node = ({ match, history }) => {
         })
         .then(result => {
             if(result.value){
-                
+                setTimers([
+                    ...timers,
+                    {
+                        daysOfWeek : [ moment(data.start).day() ],
+                        startTime : moment(data.start).format('HH:mm:ss'),
+                        endTime : moment(data.end).format('HH:mm:ss')
+                    }
+                ])
             }
         })
+    }
+
+    const getTimers = async () => {
+        if(match.params.id){
+            const result = await models.timer.findAll({ where : { node_id : match.params.id } })
+            setTimers(result.map(record => ({
+                daysOfWeek : [ record.start_day ],
+                startTime : record.start_time,
+                endTime : record.end_time
+            })))
+        }
+    }
+
+    const saveTimers = async (record) => {
+        try {
+            for(let i in timers){
+                let timer = {
+                    start_day : timers[i].daysOfWeek[0],
+                    start_time : timers[i].startTime,
+                    end_day : timers[i].daysOfWeek[0],
+                    end_time : timers[i].endTime
+                }
+
+                let instance
+                if(timer.id){
+                    instance = models.timer.findByPk(timer.id)
+                    Object.assign(instance, timer)
+                }else{
+                    instance = models.timer.build({ 
+                        node_id : record.id, 
+                        ...timer
+                    })
+                }
+                await instance.validate()
+                await instance.save()
+            }
+        }catch(e){
+            throw e
+        }
     }
 
     return (
@@ -82,6 +133,7 @@ const Node = ({ match, history }) => {
             setDataForm={setDataForm} 
             match={match} 
             history={history}
+            onSave={saveTimers}
         >
             <Form>
                 <Row>
@@ -182,7 +234,11 @@ const Node = ({ match, history }) => {
                         locale={'es-ES'}
                         nowIndicator
 
+                        events={timers}
+                        eventTextColor="#fff"
+
                         allDaySlot={false}
+                        slotDuration={'00:15:00'}
                         slotLabelFormat={{
                             hour: 'numeric',
                             minute: '2-digit',
@@ -195,6 +251,9 @@ const Node = ({ match, history }) => {
                         }}
 
                         selectable
+                        selectAllow={(selectInfo) => {
+                            return moment(selectInfo.start).date() === moment(selectInfo.end).date()
+                        }}
                         select={(data) => {
                             confirmSchedule(data)
                         }}

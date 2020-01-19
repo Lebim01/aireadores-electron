@@ -2,14 +2,20 @@ module.exports = (sequelize, Sequelize) => {
 	const Node = sequelize.define('node', {
         address: {
             type: Sequelize.STRING,
-            notEmpty: true,
-			allowNull: false,
+            validate : {
+                notEmpty: {
+                    msg : 'Dirección no puede ser vacio'
+                },
+            },
 			comment: "Dirección"
         },
         channel: {
             type: Sequelize.STRING,
-            notEmpty: true,
-			allowNull: false,
+            validate : {
+                notEmpty: {
+                    msg : 'Canal no puede ser vacio'
+                },
+            },
 			comment: "Canal"
         },
         role : {
@@ -18,20 +24,29 @@ module.exports = (sequelize, Sequelize) => {
         },
         num : {
             type: Sequelize.INTEGER,
-            notEmpty: true,
-			allowNull: false,
+            validate : {
+                notEmpty: {
+                    msg : 'Aireadores no puede ser vacio'
+                },
+            },
 			comment: "positive small integer, par"
         },
         status : {
             type: Sequelize.ENUM('encendido', 'apagado'),
-            notEmpty: true,
-			allowNull: false,
+            validate : {
+                notEmpty: {
+                    msg : 'Estado no puede ser vacio'
+                },
+            },
 			comment: "choice"
         },
         rssi : {
             type: Sequelize.FLOAT,
-            notEmpty: true,
-			allowNull: false,
+            validate : {
+                notEmpty: {
+                    msg : 'Identificador no puede ser vacio'
+                },
+            },
 			comment: "potencia"
         }
 	}, {
@@ -41,8 +56,8 @@ module.exports = (sequelize, Sequelize) => {
 	});
 
 	Node.associate = (models) => {
-        Node.hasMany(models.device, {
-			foreignKey: 'device_id'
+        Node.hasMany(models.timer, {
+			foreignKey: 'node_id'
         });
         Node.belongsTo(models.pool, { 
             foreignKey: 'pool_id' 
