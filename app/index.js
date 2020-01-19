@@ -6,7 +6,8 @@ import App from './App'
 import history_dump from 'views/timer_history_dump'
 
 // Sync database with Sequelize models
-models.sequelize.sync({ force: process.env.NODE_ENV === 'development' }).then(function() {
+models.sequelize.sync()
+.then(function() {
 	if (process.env.NODE_ENV !== "test") {
 		console.log('Database connected!');
   }
