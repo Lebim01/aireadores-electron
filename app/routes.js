@@ -23,6 +23,13 @@ var routes = [
     exact: true
   },
   {
+    path: "/historial-nodos",
+    name: "Historial de nodos",
+    icon: "fa fa-node",
+    component: HistoryNodes,
+    layout: "/admin"
+  },
+  {
     path: "/piscinas",
     name: "Piscinas",
     icon: "fa fa-node",
@@ -37,13 +44,6 @@ var routes = [
     component: Pool,
     layout: "/admin",
     hidden: true
-  },
-  {
-    path: "/historial-nodos",
-    name: "Historial de nodos",
-    icon: "fa fa-node",
-    component: HistoryNodes,
-    layout: "/admin"
   },
   {
     path: "/configuracion",
