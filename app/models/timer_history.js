@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
 	});
 
 	TimerHistory.associate = (models) => {
-		TimerHistory.hasMany(models.node, {
+		TimerHistory.belongsTo(models.node, {
 			foreignKey: 'node_id'
         });
 	}

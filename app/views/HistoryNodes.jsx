@@ -1,20 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap'
-/*import { ViewState } from '@devexpress/dx-react-scheduler';
-import {
-  Scheduler,
-  MonthView,
-  DayView,
-  WeekView,
-  Toolbar,
-  DateNavigator,
-  Appointments,
-  TodayButton,
-  ViewSwitcher
-} from '@devexpress/dx-react-scheduler-material-ui';*/
-import dataCalendar from './calendar-data'
+import FullCalendar from '@fullcalendar/react'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import models from 'models'
 
 const HistoryNodes = (props) => {
+
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+        const getHistory = async () => {
+            const result = await models.timer_history.findAll({ include : [models.node] })
+            setData(result.map(record => ({
+                start : record.start_datetime,
+                end : record.end_datetime,
+                title : `Nodo #${record.node.rssi}`
+            })))
+        }
+        getHistory()
+    }, [])
+
     return (
         <>
             <Container fluid>
@@ -22,20 +27,25 @@ const HistoryNodes = (props) => {
                     <Col className="mb-5 mb-xl-0">
                         <Card className="shadow" style={{minHeight: 300}}>
                             <CardHeader className="bg-secondary">
-                                Crear/Editar Nodo
+                                Listado de nodos
                             </CardHeader>
                             <CardBody>
-                                {/*<Scheduler locale={'es-ES'} data={dataCalendar}>
-                                    <ViewState defaultCurrentViewName="Semana" currentDate="2020-06-28" />
-                                    <DayView name="Dia" />
-                                    <WeekView name="Semana" />
-                                    <MonthView name="Mes" />
-                                    <Toolbar />
-                                    <ViewSwitcher />
-                                    <DateNavigator />
-                                    <TodayButton />
-                                    <Appointments />
-                                </Scheduler>*/}
+                                <FullCalendar 
+                                    defaultView="timeGridWeek" 
+                                    plugins={[ timeGridPlugin ]} 
+                                    locale={'es-ES'}
+                                    nowIndicator
+
+                                    events={data}
+                                    eventTextColor="#fff"
+
+                                    allDaySlot={false}
+                                    slotDuration={'00:15:00'}
+                                    slotLabelFormat={{
+                                        hour: 'numeric',
+                                        minute: '2-digit',
+                                    }}
+                                />
                             </CardBody>
                         </Card>
                     </Col>

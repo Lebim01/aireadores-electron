@@ -62,6 +62,9 @@ module.exports = (sequelize, Sequelize) => {
         Node.belongsTo(models.pool, { 
             foreignKey: 'pool_id' 
         })
+        Node.hasMany(models.timer_history, { 
+            foreignKey: 'node_id' 
+        })
 	}
 
 	return Node;
