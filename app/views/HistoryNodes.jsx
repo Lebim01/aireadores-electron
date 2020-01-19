@@ -45,6 +45,7 @@ const HistoryNodes = (props) => {
                                         hour: 'numeric',
                                         minute: '2-digit',
                                     }}
+                                    weekNumberCalculation="ISO"
                                 />
                             </CardBody>
                         </Card>
