@@ -13,7 +13,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             const { updatedAt, createdAt, ...data } = dataValues
             setDataForm(data)
         }
-    
+
         if(match.params.id && Number(match.params.id) > 0){
             getDataForm(Number(match.params.id))
         }
@@ -65,7 +65,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             }
         }catch(err){
             console.error(err)
-            Swal.fire('Eliminar', err, 'error')
+            Swal.fire('Eliminar', 'El registro está en uso, no puede ser eliminado', 'error')
         }
     }
 
@@ -86,7 +86,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
                                 </Button>
                                 <Button color="success" onClick={save}>Guardar</Button>
                                 { Number(match.params.id) > 0 &&
-                                    <Button color="danger" onClick={remove}>Eliminar</Button> 
+                                    <Button color="danger" onClick={remove}>Eliminar</Button>
                                 }
                             </CardBody>
                         </Card>
