@@ -278,29 +278,27 @@ const Node = ({ match, history }) => {
                                     Inhabilitar
                                 </Button>
                             </Col>
-                            { mode === 'inabilitar' &&
-                                <Col xs={12}>
-                                    <hr />
-                                    <fieldset>
-                                        <legend>Manual</legend>
-                                        <Row>
-                                            <Col xs={12}>
-                                                <Button block onClick={() => connectToNode(dataForm.id)}>
-                                                    Encender
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col xs={12}>
-                                                <br/>
-                                                <Button block>
-                                                    Apagar
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </fieldset>
-                                </Col>
-                            }
+                            <Col xs={12}>
+                                <hr />
+                                <fieldset>
+                                    <legend>Manual</legend>
+                                    <Row>
+                                        <Col xs={12}>
+                                            <Button block onClick={() => connectToNode(dataForm.id)}>
+                                                Encender
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
+                                            <br/>
+                                            <Button block>
+                                                Apagar
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </fieldset>
+                            </Col>
                         </Row>
                     </Col>
                 }
