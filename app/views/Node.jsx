@@ -20,7 +20,7 @@ const useTime = () => {
             setTime(moment())
         }, 60 * 1000)
         return () => {
-            clearInterval(interval)   
+            clearInterval(interval)
         }
     }, [])
 
@@ -55,7 +55,7 @@ const Node = ({ match, history }) => {
     useEffect(() => {
         getTimers()
     }, [])
-    
+
     const onChange = (e) => {
         setDataForm({
             ...dataForm,
@@ -110,8 +110,8 @@ const Node = ({ match, history }) => {
                     instance = models.timer.findByPk(timer.id)
                     Object.assign(instance, timer)
                 }else{
-                    instance = models.timer.build({ 
-                        node_id : record.id, 
+                    instance = models.timer.build({
+                        node_id : record.id,
                         ...timer
                     })
                 }
@@ -124,13 +124,13 @@ const Node = ({ match, history }) => {
     }
 
     return (
-        <EditPage 
-            model="node" 
-            route="/admin/nodos" 
+        <EditPage
+            model="node"
+            route="/admin/nodos"
             title="Crear/Editar Nodo"
-            dataForm={dataForm} 
-            setDataForm={setDataForm} 
-            match={match} 
+            dataForm={dataForm}
+            setDataForm={setDataForm}
+            match={match}
             history={history}
             onSave={saveTimers}
         >
@@ -163,7 +163,7 @@ const Node = ({ match, history }) => {
                         </FormGroup>
                     </Col>
                 </Row>
-                
+
                 <Row>
                     <Col xs={6}>
                         <FormGroup row>
@@ -208,11 +208,7 @@ const Node = ({ match, history }) => {
                         <FormGroup row>
                             <Label sm={3}>Estado</Label>
                             <Col sm={9} lg={6}>
-                                <Input type="select" name="status" onChange={onChange} value={dataForm.status}>
-                                    <option value="">Seleccione</option>
-                                    <option value="encendido">Encendido</option>
-                                    <option value="apagado">Apagado</option>
-                                </Input>
+                                <label>{dataForm.status}</label>
                             </Col>
                         </FormGroup>
                     </Col>
@@ -227,9 +223,9 @@ const Node = ({ match, history }) => {
 
             <Row>
                 <Col xs={8} lg={10}>
-                    <FullCalendar 
-                        defaultView="timeGridWeek" 
-                        plugins={[ timeGridPlugin, interactionPlugin ]} 
+                    <FullCalendar
+                        defaultView="timeGridWeek"
+                        plugins={[ timeGridPlugin, interactionPlugin ]}
                         locale={'es-ES'}
                         nowIndicator
 
@@ -238,6 +234,7 @@ const Node = ({ match, history }) => {
 
                         allDaySlot={false}
                         slotDuration={'00:15:00'}
+                        weekNumberCalculation="ISO"
                         slotLabelFormat={{
                             hour: 'numeric',
                             minute: '2-digit',

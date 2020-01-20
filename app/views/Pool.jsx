@@ -29,7 +29,7 @@ const Pool = ({ match, history }) => {
     <EditPage
       model="pool"
       route="/admin/piscinas"
-      title="Crear/Editar Psicina"
+      title="Crear/Editar Piscina"
       dataForm={dataForm}
       setDataForm={setDataForm}
       match={match}

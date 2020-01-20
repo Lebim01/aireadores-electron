@@ -27,12 +27,12 @@ const HistoryNodes = (props) => {
                     <Col className="mb-5 mb-xl-0">
                         <Card className="shadow" style={{minHeight: 300}}>
                             <CardHeader className="bg-secondary">
-                                Listado de nodos
+                                Historial de nodos
                             </CardHeader>
                             <CardBody>
-                                <FullCalendar 
-                                    defaultView="timeGridWeek" 
-                                    plugins={[ timeGridPlugin ]} 
+                                <FullCalendar
+                                    defaultView="timeGridWeek"
+                                    plugins={[ timeGridPlugin ]}
                                     locale={'es-ES'}
                                     nowIndicator
 
@@ -45,6 +45,7 @@ const HistoryNodes = (props) => {
                                         hour: 'numeric',
                                         minute: '2-digit',
                                     }}
+                                    weekNumberCalculation="ISO"
                                 />
                             </CardBody>
                         </Card>
