@@ -27,25 +27,6 @@ const useTime = () => {
     return time
 }
 
-const connectToNode = (node_id) => {
-    Swal.fire({
-        title : 'Conectar a nodo',
-        text : 'Presionar OK para conectar',
-        showLoaderOnConfirm: true,
-        showCancelButton: true,
-        allowOutsideClick: () => !Swal.isLoading(),
-        preConfirm : () => {
-            return turnOnNode(node_id)
-                .then(() => {
-                    Swal.fire('Conectado', '', 'success')
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(error)
-                })
-        }
-    })
-}
-
 const Node = ({ match, history }) => {
     const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : '' })
     const [mode, setMode] = useState('programar')
@@ -122,6 +103,85 @@ const Node = ({ match, history }) => {
             throw e
         }
     }
+
+    const encenderNodo = () => {
+        Swal.fire({
+            title : 'Encender nodo manual',
+            text : 'Presionar OK para continuar',
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm : () => {
+                return turnOnNode(dataForm.id)
+                    .then(() => {
+                        Swal.fire('Encendido', '', 'success')
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error)
+                    })
+            }
+        })
+    }
+    
+    const apagarNodo = () => {
+        Swal.fire({
+            title : 'Apagar nodo manual',
+            text : 'Presionar OK para continuar',
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm : () => {
+                return turnOnNode(dataForm.id)
+                    .then(() => {
+                        Swal.fire('Apagado', '', 'success')
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error)
+                    })
+            }
+        })
+    }
+    
+    const habilitarNodo = () => {
+        Swal.fire({
+            title : 'Habilitar programa nodo',
+            text : 'Presionar OK para continuar',
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm : () => {
+                return turnOnNode(dataForm.id)
+                    .then(() => {
+                        setMode('programar');
+                        Swal.fire('Habilitado', '', 'success')
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error)
+                    })
+            }
+        })
+    }
+    
+    const deshabilitarNodo = () => {
+        Swal.fire({
+            title : 'Deshabilitar programa nodo',
+            text : 'Presionar OK para continuar',
+            showLoaderOnConfirm: true,
+            showCancelButton: true,
+            allowOutsideClick: () => !Swal.isLoading(),
+            preConfirm : () => {
+                return turnOnNode(dataForm.id)
+                    .then(() => {
+                        Swal.fire('Deshabilitado', '', 'success')
+                        setMode('inabilitar');
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error)
+                    })
+            }
+        })
+    }
+    
 
     return (
         <EditPage
@@ -265,13 +325,13 @@ const Node = ({ match, history }) => {
                                 <Label>{time.format('dddd, HH:mm')}</Label>
                             </Col>
                             <Col xs={12}>
-                                <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => setMode('programar')}>
+                                <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => habilitarNodo()}>
                                     Programar
                                 </Button>
                             </Col>
                             <Col xs={12}>
                                 <br/>
-                                <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => setMode('inabilitar')}>
+                                <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => deshabilitarNodo() }>
                                     Inhabilitar
                                 </Button>
                             </Col>
@@ -281,7 +341,7 @@ const Node = ({ match, history }) => {
                                     <legend>Manual</legend>
                                     <Row>
                                         <Col xs={12}>
-                                            <Button block onClick={() => connectToNode(dataForm.id)}>
+                                            <Button block onClick={() => encenderNodo()}>
                                                 Encender
                                             </Button>
                                         </Col>
@@ -289,7 +349,7 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block>
+                                            <Button block onChange={() => apagarNodo()}>
                                                 Apagar
                                             </Button>
                                         </Col>

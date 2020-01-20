@@ -37,7 +37,7 @@ export function connectToRasberry(){
     })
 }
 
-export function turnOnNode(node_id){
+export function connectToNode(node_id){
     return new Promise(async (resolve, reject) => {
         try {
             const conn = await connectToRasberry()
@@ -56,30 +56,131 @@ export function turnOnNode(node_id){
                 }
             } = nodeInstance
 
-            // comando que se ejecuta
-            const shell = `echo 'comando shell' --address ${address} --channel ${channel} --role ${role} --num ${num} --rssi ${rssi}`
-            // respuesta esperada para devolver positivo
-            const compare = `comando shell`
-
-            conn.exec(shell, function(err, stream){
-                if (err)
-                    throw err;
-          
-                stream.on('data', function(data) {
-                    console.log('STDOUT::', data.toString())
-                    if(data.toString().localeCompare(compare)){
-                        resolve()
-                    }else{
-                        reject()
-                    }
-                    
-                    stream.end()
-                    conn.end()
-                });
+            resolve({
+                conn, 
+                node : {
+                    address,
+                    channel,
+                    role,
+                    num,
+                    rssi
+                }
             })
         }
         catch(err){
             reject(err)
         }
+    })
+}
+
+export async function turnOnNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        const { conn, node } = await connectToNode(node_id)
+
+        // comando que se ejecuta
+        const shell = `echo encender --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+        // respuesta esperada para devolver positivo
+        const compare = `comando shell`
+
+        conn.exec(shell, function(err, stream){
+            if (err)
+                throw err;
+      
+            stream.on('data', function(data) {
+                console.log('STDOUT::', data.toString())
+                if(data.toString().localeCompare(compare)){
+                    resolve()
+                }else{
+                    reject('Respuesta no esperada')
+                }
+                
+                stream.end()
+                conn.end()
+            });
+        })
+    })
+}
+
+export function turnOffNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        const { conn, node } = await connectToNode(node_id)
+
+        // comando que se ejecuta
+        const shell = `echo apagar --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+        // respuesta esperada para devolver positivo
+        const compare = `comando shell`
+
+        conn.exec(shell, function(err, stream){
+            if (err)
+                throw err;
+      
+            stream.on('data', function(data) {
+                console.log('STDOUT::', data.toString())
+                if(data.toString().localeCompare(compare)){
+                    resolve()
+                }else{
+                    reject('Respuesta no esperada')
+                }
+                
+                stream.end()
+                conn.end()
+            });
+        })
+    })
+}
+
+export function enableNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        const { conn, node } = await connectToNode(node_id)
+
+        // comando que se ejecuta
+        const shell = `echo programar --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+        // respuesta esperada para devolver positivo
+        const compare = `comando shell`
+
+        conn.exec(shell, function(err, stream){
+            if (err)
+                throw err;
+      
+            stream.on('data', function(data) {
+                console.log('STDOUT::', data.toString())
+                if(data.toString().localeCompare(compare)){
+                    resolve()
+                }else{
+                    reject('Respuesta no esperada')
+                }
+                
+                stream.end()
+                conn.end()
+            });
+        })
+    })
+}
+
+export function disableNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        const { conn, node } = await connectToNode(node_id)
+
+        // comando que se ejecuta
+        const shell = `echo inabilitar --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+        // respuesta esperada para devolver positivo
+        const compare = `comando shell`
+
+        conn.exec(shell, function(err, stream){
+            if (err)
+                throw err;
+      
+            stream.on('data', function(data) {
+                console.log('STDOUT::', data.toString())
+                if(data.toString().localeCompare(compare)){
+                    resolve()
+                }else{
+                    reject('Respuesta no esperada')
+                }
+                
+                stream.end()
+                conn.end()
+            });
+        })
     })
 }
