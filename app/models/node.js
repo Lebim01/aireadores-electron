@@ -33,11 +33,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         status : {
             type: Sequelize.ENUM('encendido', 'apagado'),
-            validate : {
-                notEmpty: {
-                    msg : 'Estado no puede ser vacio'
-                },
-            },
+            defaultValue : 'encendido',
 			comment: "choice"
         },
         rssi : {

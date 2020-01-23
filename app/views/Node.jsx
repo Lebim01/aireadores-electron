@@ -65,10 +65,33 @@ const Node = ({ match, history }) => {
         })
     }
 
+    const confirmDeleteTimer = (timers, data) => {
+        const _instance = data.event
+        Swal.fire({
+            title : '¿Quieres eliminar este timer?',
+            html : `Encendido: ${moment(_instance.start).format('dddd, HH:mm:ss')} <br/> Apagado: ${moment(_instance.end).format('dddd, HH:mm:ss')}`,
+            showCancelButton: true,
+        })
+        .then(result => {
+            if(result.value){
+                let _timers = [ ...timers ]
+                _timers.splice(
+                    _timers.findIndex(row => 
+                        row.startTime === moment(_instance.start).format('HH:mm:ss')
+                        && row.endTime === moment(_instance.end).format('HH:mm:ss')
+                    ),
+                    1
+                )
+                setTimers(_timers)
+            }
+        })
+    }
+
     const getTimers = async () => {
         if(match.params.id){
             const result = await models.timer.findAll({ where : { node_id : match.params.id } })
             setTimers(result.map(record => ({
+                id : record.id,
                 daysOfWeek : [ record.start_day ],
                 startTime : record.start_time,
                 endTime : record.end_time
@@ -80,6 +103,7 @@ const Node = ({ match, history }) => {
         try {
             for(let i in timers){
                 let timer = {
+                    id : timers[i].id,
                     start_day : timers[i].daysOfWeek[0],
                     start_time : timers[i].startTime,
                     end_day : timers[i].daysOfWeek[0],
@@ -88,7 +112,7 @@ const Node = ({ match, history }) => {
 
                 let instance
                 if(timer.id){
-                    instance = models.timer.findByPk(timer.id)
+                    instance = await models.timer.findByPk(timer.id)
                     Object.assign(instance, timer)
                 }else{
                     instance = models.timer.build({
@@ -290,6 +314,9 @@ const Node = ({ match, history }) => {
                         nowIndicator
 
                         events={timers}
+                        eventClick={(data) => {
+                            confirmDeleteTimer(timers, data)
+                        }}
                         eventTextColor="#fff"
 
                         allDaySlot={false}

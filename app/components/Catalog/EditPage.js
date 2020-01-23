@@ -31,7 +31,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             if(id){
                 instance = await models[model].findByPk(id)
                 Object.assign(instance, fieldsToCreate)
-                const valid = await instance.validate()
+                await instance.validate()
                 await instance.save()
             }else{
                 instance = models[model].build(fieldsToCreate)
@@ -45,6 +45,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             Swal.fire('Guardar', 'Guardado correctamente', 'success')
             goBack()
         }catch(err){
+            console.error(err)
             Swal.fire('Guardar', `${err.errors.map(({message}) => message).join('<br>')}`, 'error')
         }
     }
