@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { turnOnNode } from 'helpers/connect-ssh'
+import { turnOnNode, pingNode } from 'helpers/connect-ssh'
 import moment from 'moment';
 import 'moment/locale/es'
 import Swal from 'sweetalert2';
@@ -128,6 +128,31 @@ const Node = ({ match, history }) => {
         }
     }
 
+    const pingNodo = () => {
+        Swal.fire({
+            title : 'Connectando',
+            text : 'Ejecutando ping...',
+            allowOutsideClick: () => !Swal.isLoading(),
+            onBeforeOpen : () => {
+                Swal.showLoading()
+                return pingNode(dataForm.id)
+                    .then((output) => {
+                        Swal.hideLoading()
+                        Swal.close()
+                        Swal.fire(output)
+                        return output
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error)
+                    })
+            }
+        }).then((output) => {
+            // debugger
+            // Swal.close()
+            // Swal.fire('Resultado', output, 'success')
+        })
+    }
+
     const encenderNodo = () => {
         Swal.fire({
             title : 'Encender nodo manual',
@@ -137,7 +162,7 @@ const Node = ({ match, history }) => {
             allowOutsideClick: () => !Swal.isLoading(),
             preConfirm : () => {
                 return turnOnNode(dataForm.id)
-                    .then(() => {
+                    .then((output) => {
                         Swal.fire('Encendido', '', 'success')
                     })
                     .catch(error => {
@@ -366,6 +391,13 @@ const Node = ({ match, history }) => {
                                 <hr />
                                 <fieldset>
                                     <legend>Manual</legend>
+                                    <Row>
+                                        <Col xs={12}>
+                                            <Button block onClick={() => pingNodo()}>
+                                                Ping
+                                            </Button>
+                                        </Col>
+                                    </Row>
                                     <Row>
                                         <Col xs={12}>
                                             <Button block onClick={() => encenderNodo()}>

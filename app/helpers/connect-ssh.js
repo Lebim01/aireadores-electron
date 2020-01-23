@@ -184,3 +184,31 @@ export function disableNode(node_id){
         })
     })
 }
+
+export async function pingNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        const { conn, node } = await connectToNode(node_id)
+
+        // comando que se ejecuta
+        const shell = `./aireadores-server/aircontrol.py ping ${node.address} ${node.rssi} ${node.channel} ${node.role}`
+        // respuesta esperada para devolver positivo
+        const compare = `comando shell`
+
+        conn.exec(shell, function(err, stream){
+            if (err)
+                throw err;
+
+            stream.on('data', function(data) {
+                console.log('STDOUT::', data.toString())
+                if(data.toString().localeCompare(compare)){
+                    resolve(data.toString())
+                }else{
+                    reject('Respuesta no esperada')
+                }
+
+                stream.end()
+                conn.end()
+            });
+        })
+    })
+}
