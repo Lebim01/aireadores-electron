@@ -26,6 +26,10 @@ module.exports = {
         type: Sequelize.ENUM('encendido', 'apagado'),
         defaultValue : 'encendido',
       },
+      device_id: {
+        type: Sequelize.INTEGER,
+        comment: "identificador"
+      },
       rssi: {
         type: Sequelize.FLOAT,
         comment: "potencia"

@@ -37,6 +37,10 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue : 'encendido',
 			comment: "choice"
         },
+        device_id : {
+            type: Sequelize.INTEGER,
+			comment: "positive small integer"
+        },
         rssi : {
             type: Sequelize.FLOAT,
             validate : {

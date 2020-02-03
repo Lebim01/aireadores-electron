@@ -307,9 +307,9 @@ const Node = ({ match, history }) => {
                             <Col sm={9} lg={6}>
                                 <Input
                                     type="number"
-                                    name="rssi"
+                                    name="device_id"
                                     onChange={onChange}
-                                    value={dataForm.rssi}
+                                    value={dataForm.device_id}
                                 />
                             </Col>
                         </FormGroup>
