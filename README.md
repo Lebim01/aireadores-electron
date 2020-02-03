@@ -1,3 +1,7 @@
+Previo a ejecutar migraciones debe estar instalado sequelize-cli, docs
+
+https://sequelize.org/master/manual/migrations.html
+
 ```
 # ejecutar migraciones
 
