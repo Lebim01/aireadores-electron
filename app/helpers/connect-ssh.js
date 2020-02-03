@@ -78,8 +78,18 @@ export function enableProgramNode(node_id){
     return new Promise(async (resolve, reject) => {
         const { conn, node } = await connectToNode(node_id)
 
+        const schedule = await models.timer.findAll({ where: { node_id } })
+
+        if (!schedule || schedule.length < 1) {
+            reject('No hay horarios registrados. Guarde la configuración primero')
+        }
+
+        // "1:00:00:00 1:00:15:00 1:01:00:00 1:01:15:00 1:02:30:00 1:02:45:00 4:03:15:00 4:03:30:00 6:04:30:00 6:04:45:00"
+        const scheduleArgs = schedule.map((s) => { return `${s.start_day}:${s.start_time} ${s.end_day}:${s.end_time}` }).join(' ')
+
         // comando que se ejecuta
-        const shell = `echo encender --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+        const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${scheduleArgs}`
+
         // respuesta esperada para devolver positivo
         const compare = `comando shell`
 
@@ -98,29 +108,6 @@ export function enableProgramNode(node_id){
                 stream.end()
             });
         })
-
-        const schedule = await models.timer.findAll({ where: { node_id } })
-
-        await Promise.all(schedule.map(({ start_day, start_time, end_day, end_time }) => {
-            return new Promise((resolve, reject) => {
-                conn.exec(`echo programar nodo --start_day ${start_day} --start_time ${start_time} --end_day ${end_day} --end_time ${end_time}`, (err, stream) => {
-                    if (err)
-                        reject(err);
-            
-                    stream.on('data', function(data) {
-                        console.log('STDOUT::', data.toString())
-                        if(data.toString().localeCompare(compare)){
-                            resolve()
-                        }else{
-                            reject('Respuesta no esperada')
-                        }
-                        
-                        stream.end()
-                        resolve()
-                    });
-                })
-            })
-        }))
 
         conn.end()
     })
