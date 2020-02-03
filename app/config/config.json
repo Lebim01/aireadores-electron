@@ -13,6 +13,7 @@
     "database": "react_sequelize_test",
     "host": "",
     "dialect": "sqlite",
-    "storage": "./database.sqlite"
+    "storage": "./database.sqlite",
+    "logging": false
   }
 }

@@ -5,7 +5,7 @@ import fs from 'fs'
 import Sequelize from 'sequelize';
 import databaseConfig from 'config/config.json'
 
-const env = process.env.NODE_ENV 
+const env = process.env.NODE_ENV
 const config = databaseConfig[env || 'development']
 if (!fs.existsSync('/models/index.js')) {
     config.storage = `./app/${config.storage}`
@@ -14,7 +14,7 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 const db = {};
 
-const dirModels = path.join(__dirname, 'models')
+const dirModels = path.join(process.env.pwd, 'app', 'models')
 
 fs
 	.readdirSync(dirModels)

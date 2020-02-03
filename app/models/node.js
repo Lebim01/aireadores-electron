@@ -3,10 +3,12 @@ module.exports = (sequelize, Sequelize) => {
 	const Node = sequelize.define('node', {
         address: {
             type: Sequelize.STRING,
+            allowNull: false,
             validate : {
                 notEmpty: {
                     msg : 'Dirección no puede ser vacio'
                 },
+                notNull: { msg: 'Dirección no puede ser vacio' }
             },
 			comment: "Dirección"
         },
