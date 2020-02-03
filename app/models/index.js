@@ -14,7 +14,7 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 const db = {};
 
-const dirModels = path.join(process.env.pwd, 'app', 'models')
+const dirModels = path.join(__dirname, 'models')
 
 fs
 	.readdirSync(dirModels)
