@@ -29,7 +29,8 @@ export function connectToRasberry(){
                 host: sshConfig.ip,
                 port: sshConfig.port,
                 username: sshConfig.username,
-                privateKey: fs.readFileSync(sshConfig.key)
+                privateKey: fs.readFileSync(sshConfig.key),
+                passphrase: sshConfig.passphrase || null,
             });
         }catch(err){
             reject(err)
