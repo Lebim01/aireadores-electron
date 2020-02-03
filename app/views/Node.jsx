@@ -31,6 +31,7 @@ const Node = ({ match, history }) => {
     const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'encendido' })
     const [mode, setMode] = useState('programar')
     const [timers, setTimers] = useState([])
+    const [timersDeleted, setTimersDeleted] = useState([])
     const time = useTime()
 
     useEffect(() => {
@@ -75,13 +76,13 @@ const Node = ({ match, history }) => {
         .then(result => {
             if(result.value){
                 let _timers = [ ...timers ]
-                _timers.splice(
+                setTimersDeleted(_timers.splice(
                     _timers.findIndex(row => 
                         row.startTime === moment(_instance.start).format('HH:mm:ss')
                         && row.endTime === moment(_instance.end).format('HH:mm:ss')
                     ),
                     1
-                )
+                ))
                 setTimers(_timers)
             }
         })
@@ -122,6 +123,22 @@ const Node = ({ match, history }) => {
                 }
                 await instance.validate()
                 await instance.save()
+            }
+            console.log('deleted', timersDeleted)
+            for(let i in timersDeleted){
+                let timer = {
+                    id : timersDeleted[i].id,
+                    start_day : timersDeleted[i].daysOfWeek[0],
+                    start_time : timersDeleted[i].startTime,
+                    end_day : timersDeleted[i].daysOfWeek[0],
+                    end_time : timersDeleted[i].endTime
+                }
+
+                let instance
+                if(timer.id){
+                    instance = await models.timer.findByPk(timer.id)
+                    await instance.destroy()
+                }
             }
         }catch(e){
             throw e
