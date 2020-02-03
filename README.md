@@ -1,7 +1,7 @@
 ```
 # ejecutar migraciones
 
-node ./app/init-database.js
+cd app && node init-database.js
 
 # ejecutar applicación
 
