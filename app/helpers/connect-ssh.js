@@ -78,7 +78,7 @@ export function enableProgramNode(node_id){
     return new Promise(async (resolve, reject) => {
         const { conn, node } = await connectToNode(node_id)
 
-        const schedule = await models.timer.findAll({ where: { node_id } })
+        const schedule = await models.timer.findAll({ where: { node_id }, order: [ ['start_day'], ['start_time'] ] })
 
         if (!schedule || schedule.length < 1) {
             reject('No hay horarios registrados. Guarde la configuración primero')
