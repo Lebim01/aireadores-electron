@@ -1,24 +1,16 @@
-module.exports = (sequelize, Sequelize) => {
-	const Ssh = sequelize.define('ssh', {
-        ip: {
-            type: Sequelize.STRING,
-			comment: "IP"
-        },
-        port: {
-            type: Sequelize.INTEGER,
-			comment: "port"
-        },
-        username : {
-            type: Sequelize.STRING,
-			comment: "user"
-        },
-        key : {
-            type: Sequelize.STRING,
-			comment: "path to private ssh key"
-        },
-	}, {
-        tableName: 'ssh',
-	});
-
-	return Ssh;
-}
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Ssh = sequelize.define('ssh', {
+    ip: DataTypes.STRING,
+    port: DataTypes.INTEGER,
+    username: DataTypes.STRING,
+    key: DataTypes.STRING,
+    passphrase: DataTypes.STRING
+  }, {
+    tableName:'ssh'
+  });
+  Ssh.associate = function(models) {
+    // associations can be defined here
+  };
+  return Ssh;
+};

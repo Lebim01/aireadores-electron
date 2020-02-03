@@ -24,23 +24,26 @@ const save = async (data) => {
     if(!data.username) throw new Error('Usuario es requerido')
     if(!data.key) throw new Error('Llave privada es requerida')
 
-    const sshConfig = await models.ssh.findOne({ where : { id : 1 } })
+    const sshConfig = await models.ssh.findByPk(1)
     await sshConfig.update(data)
 
     Swal.fire('Guardar', 'Guardado correctamente', 'success')
   }catch(err){
-    Swal.fire('Guardar', err, 'error')
+    Swal.fire('Guardar', err.toString(), 'error')
   }
 }
 
 const Ssh = () => {
 
-  const [dataForm, setDataForm] = useState({ ip : '', username : '', port : '' })
+  const [dataForm, setDataForm] = useState({ ip : '', username : '', port : '', passphrase: '' })
 
   useEffect(() => {
-    models.ssh.findOne({ where : { id : 1 } })
-    .then(({ dataValues : data }) => {
-      setDataForm(data)
+    models.ssh.findByPk(1)
+    .then((res) => {
+      if(res){
+        const { dataValues: data } = res
+        setDataForm(data)
+      }
     })
   }, [])
 
@@ -119,6 +122,18 @@ const Ssh = () => {
                         type="file"
                         name="key"
                         onChange={onChange}
+                      />
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Label sm={2}>Passphrase</Label>
+                    <Col sm={10} lg={6}>
+                      <Input
+                        type="password"
+                        name="passphrase"
+                        onChange={onChange}
+                        value={dataForm.passphrase}
                       />
                     </Col>
                   </FormGroup>

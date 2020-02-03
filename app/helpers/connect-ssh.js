@@ -73,7 +73,7 @@ export function connectToNode(node_id){
     })
 }
 
-export async function turnOnNode(node_id){
+export function enableProgramNode(node_id){
     return new Promise(async (resolve, reject) => {
         const { conn, node } = await connectToNode(node_id)
 
@@ -85,7 +85,7 @@ export async function turnOnNode(node_id){
         conn.exec(shell, function(err, stream){
             if (err)
                 throw err;
-      
+    
             stream.on('data', function(data) {
                 console.log('STDOUT::', data.toString())
                 if(data.toString().localeCompare(compare)){
@@ -95,9 +95,65 @@ export async function turnOnNode(node_id){
                 }
                 
                 stream.end()
-                conn.end()
             });
         })
+
+        const schedule = await models.timer.findAll({ where: { node_id } })
+
+        await Promise.all(schedule.map(({ start_day, start_time, end_day, end_time }) => {
+            return new Promise((resolve, reject) => {
+                conn.exec(`echo programar nodo --start_day ${start_day} --start_time ${start_time} --end_day ${end_day} --end_time ${end_time}`, (err, stream) => {
+                    if (err)
+                        reject(err);
+            
+                    stream.on('data', function(data) {
+                        console.log('STDOUT::', data.toString())
+                        if(data.toString().localeCompare(compare)){
+                            resolve()
+                        }else{
+                            reject('Respuesta no esperada')
+                        }
+                        
+                        stream.end()
+                        resolve()
+                    });
+                })
+            })
+        }))
+
+        conn.end()
+    })
+}
+
+export async function turnOnNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { conn, node } = await connectToNode(node_id)
+
+            // comando que se ejecuta
+            const shell = `echo encender --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+            // respuesta esperada para devolver positivo
+            const compare = `comando shell`
+
+            conn.exec(shell, function(err, stream){
+                if (err)
+                    throw err;
+        
+                stream.on('data', function(data) {
+                    console.log('STDOUT::', data.toString())
+                    if(data.toString().localeCompare(compare)){
+                        resolve()
+                    }else{
+                        reject('Respuesta no esperada')
+                    }
+                    
+                    stream.end()
+                    conn.end()
+                });
+            })
+        }catch(err){
+            reject(err)
+        }
     })
 }
 

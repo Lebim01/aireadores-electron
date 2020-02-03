@@ -1,14 +1,10 @@
-'use strict';
-
 import path from 'path'
 import fs from 'fs'
 import Sequelize from 'sequelize';
-import databaseConfig from 'config/config.json'
+import databaseConfig from 'config/database.json'
 
 const config = databaseConfig.development
-if (!fs.existsSync('/models/index.js')) {
-    config.storage = `./app/${config.storage}`
-}
+const env = process.env.NODE_ENV || "development";
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 const db = {};

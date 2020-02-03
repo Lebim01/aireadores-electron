@@ -1,0 +1,18 @@
+{
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "react_sequelize",
+    "host": "127.0.0.1",
+    "dialect": "sqlite",
+    "storage": "./database.sqlite"
+  },
+  "test": {
+    "username": "root",
+    "password": "",
+    "database": "react_sequelize_test",
+    "host": "",
+    "dialect": "sqlite",
+    "storage": "./database.sqlite"
+  }
+}

@@ -1,4 +1,3 @@
-'use strict'
 module.exports = (sequelize, Sequelize) => {
 	const Node = sequelize.define('node', {
         address: {
@@ -50,9 +49,9 @@ module.exports = (sequelize, Sequelize) => {
         tableName: 'node',
         timestamps: true,
         updatedAt: 'last_updated'
-    });
-    
-    Node.associate = (models) => {
+	});
+
+	Node.associate = (models) => {
         Node.hasMany(models.timer, {
 			foreignKey: 'node_id'
         });

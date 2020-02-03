@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { turnOnNode, pingNode } from 'helpers/connect-ssh'
+import { turnOnNode, pingNode, enableProgramNode } from 'helpers/connect-ssh'
 import moment from 'moment';
 import 'moment/locale/es'
 import Swal from 'sweetalert2';
@@ -28,7 +28,7 @@ const useTime = () => {
 }
 
 const Node = ({ match, history }) => {
-    const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : '' })
+    const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'encendido' })
     const [mode, setMode] = useState('programar')
     const [timers, setTimers] = useState([])
     const time = useTime()
@@ -199,7 +199,7 @@ const Node = ({ match, history }) => {
             showCancelButton: true,
             allowOutsideClick: () => !Swal.isLoading(),
             preConfirm : () => {
-                return turnOnNode(dataForm.id)
+                return enableProgramNode(dataForm.id)
                     .then(() => {
                         setMode('programar');
                         Swal.fire('Habilitado', '', 'success')
@@ -219,7 +219,8 @@ const Node = ({ match, history }) => {
             showCancelButton: true,
             allowOutsideClick: () => !Swal.isLoading(),
             preConfirm : () => {
-                return turnOnNode(dataForm.id)
+                return 
+                    turnOnNode(dataForm.id)
                     .then(() => {
                         Swal.fire('Deshabilitado', '', 'success')
                         setMode('inabilitar');
