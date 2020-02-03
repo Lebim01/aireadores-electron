@@ -51,9 +51,9 @@ export function connectToNode(node_id){
                 dataValues : {
                     address,
                     channel,
+                    device_id,
                     role,
                     num,
-                    rssi
                 }
             } = nodeInstance
 
@@ -62,9 +62,9 @@ export function connectToNode(node_id){
                 node : {
                     address,
                     channel,
-                    role,
+                    device_id,
+                    role: 0,  // TODO get it from frontend
                     num,
-                    rssi
                 }
             })
         }
@@ -247,7 +247,7 @@ export async function pingNode(node_id){
         const { conn, node } = await connectToNode(node_id)
 
         // comando que se ejecuta
-        const shell = `./aireadores-server/aircontrol.py ping ${node.address} ${node.rssi} ${node.channel} ${node.role}`
+        const shell = `./aireadores-server/aircontrol.py ping ${node.address} ${node.channel} ${node.device_id} ${node.role}`
         // respuesta esperada para devolver positivo
         const compare = `comando shell`
 
