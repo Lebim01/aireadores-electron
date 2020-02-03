@@ -41,15 +41,15 @@ module.exports = (sequelize, Sequelize) => {
         },
         device_id : {
             type: Sequelize.INTEGER,
-			comment: "positive small integer"
-        },
-        rssi : {
-            type: Sequelize.FLOAT,
+			comment: "positive small integer",
             validate : {
                 notEmpty: {
                     msg : 'Identificador no puede ser vacio'
                 },
             },
+        },
+        rssi : {
+            type: Sequelize.FLOAT,
 			comment: "potencia"
         }
 	}, {
