@@ -5,7 +5,8 @@ import fs from 'fs'
 import Sequelize from 'sequelize';
 import databaseConfig from 'config/config.json'
 
-const config = databaseConfig.development
+const env = process.env.NODE_ENV 
+const config = databaseConfig[env || 'development']
 if (!fs.existsSync('/models/index.js')) {
     config.storage = `./app/${config.storage}`
 }

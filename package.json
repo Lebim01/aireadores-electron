@@ -161,11 +161,12 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "setupFiles": [
-      "./internals/scripts/CheckBuildsExist.js"
+      "./internals/scripts/CheckBuildsExist.js",
+      "./internals/scripts/setup.js"
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.7.5",
+    "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-proposal-decorators": "^7.7.4",
     "@babel/plugin-proposal-do-expressions": "^7.7.4",
@@ -184,13 +185,13 @@
     "@babel/plugin-syntax-import-meta": "^7.7.4",
     "@babel/plugin-transform-react-constant-elements": "^7.7.4",
     "@babel/plugin-transform-react-inline-elements": "^7.7.4",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/preset-env": "^7.8.4",
     "@babel/preset-flow": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
     "@babel/register": "^7.7.4",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-dev-expression": "^0.2.2",
     "babel-plugin-material-ui": "^0.3.1",
@@ -261,10 +262,10 @@
     "yarn": "^1.21.1"
   },
   "dependencies": {
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/styles": "^4.8.2",
     "@fortawesome/fontawesome-free": "^5.12.0",
     "@hot-loader/react-dom": "^16.11.0",
+    "@material-ui/core": "^4.8.3",
+    "@material-ui/styles": "^4.8.2",
     "connected-react-router": "^6.6.1",
     "core-js": "^3.5.0",
     "devtron": "^1.4.0",
