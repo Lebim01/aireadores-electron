@@ -361,7 +361,7 @@ const Node = ({ match, history }) => {
 
                         selectable
                         selectAllow={(selectInfo) => {
-                            return moment(selectInfo.start).date() === moment(selectInfo.end).date()
+                            return moment(selectInfo.end).diff(moment(selectInfo.start)) === 900000
                         }}
                         select={(data) => {
                             confirmSchedule(data)
