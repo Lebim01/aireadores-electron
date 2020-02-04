@@ -38,8 +38,8 @@ const Ssh = () => {
   const [dataForm, setDataForm] = useState({ ip : '', username : '', port : '', passphrase: '' })
 
   useEffect(() => {
-    models.ssh.findByPk(1)
-    .then((res) => {
+    models.ssh.findOrCreate({ where: { id:1 } })
+    .then(([res, isCreated]) => {
       if(res){
         const { dataValues: data } = res
         setDataForm(data)
