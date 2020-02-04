@@ -107,10 +107,9 @@ export function enableProgramNode(node_id){
                     }
                     
                     stream.end()
+                    conn.end()
                 });
             })
-
-            conn.end()
         }
         catch(err){
             reject(err)
