@@ -363,7 +363,8 @@ const Node = ({ match, history }) => {
 
                         events={timers}
                         eventClick={(data) => {
-                            confirmDeleteTimer(timers, data)
+                            if(!disabled)
+                                confirmDeleteTimer(timers, data)
                         }}
                         eventTextColor="#fff"
 
