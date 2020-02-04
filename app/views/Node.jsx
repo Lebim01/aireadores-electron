@@ -168,6 +168,7 @@ const Node = ({ match, history }) => {
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
+                        Swal.hideLoading()
                     })
             }
         }).then((output) => {
