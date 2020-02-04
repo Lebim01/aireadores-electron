@@ -101,7 +101,7 @@ export function enableProgramNode(node_id){
                 stream.on('data', function(data) {
                     console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
-                        resolve()
+                        resolve(data.toString())
                     }else{
                         reject('Respuesta no esperada')
                     }
@@ -134,7 +134,7 @@ export async function turnOnNode(node_id){
                 stream.on('data', function(data) {
                     console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
-                        resolve()
+                        resolve(data.toString())
                     }else{
                         reject('Respuesta no esperada')
                     }
@@ -166,7 +166,7 @@ export function turnOffNode(node_id){
                 stream.on('data', function(data) {
                     console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
-                        resolve()
+                        resolve(data.toString())
                     }else{
                         reject('Respuesta no esperada')
                     }
@@ -198,7 +198,7 @@ export function enableNode(node_id){
                 stream.on('data', function(data) {
                     console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
-                        resolve()
+                        resolve(data.toString())
                     }else{
                         reject('Respuesta no esperada')
                     }
@@ -230,7 +230,7 @@ export function disableNode(node_id){
                 stream.on('data', function(data) {
                     console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
-                        resolve()
+                        resolve(data.toString())
                     }else{
                         reject('Respuesta no esperada')
                     }

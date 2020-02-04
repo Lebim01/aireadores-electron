@@ -92,6 +92,8 @@ const Node = ({ match, history }) => {
         })
     }
 
+    /** SAVE/GET */
+
     const getTimers = async () => {
         if(match.params.id){
             const result = await models.timer.findAll({ where : { node_id : match.params.id } })
@@ -152,6 +154,8 @@ const Node = ({ match, history }) => {
         }
     }
 
+    /** SSH METHODS */
+
     const pingNodo = () => {
         Swal.fire({
             title : 'Connectando',
@@ -188,7 +192,8 @@ const Node = ({ match, history }) => {
             preConfirm : () => {
                 return turnOnNode(dataForm.id)
                     .then((output) => {
-                        Swal.fire('Encendido', '', 'success')
+                        Swal.fire(output)
+                        //Swal.fire('Encendido', '', 'success')
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
@@ -206,8 +211,9 @@ const Node = ({ match, history }) => {
             allowOutsideClick: () => !Swal.isLoading(),
             preConfirm : () => {
                 return turnOnNode(dataForm.id)
-                    .then(() => {
-                        Swal.fire('Apagado', '', 'success')
+                    .then((output) => {
+                        Swal.fire(output)
+                        //Swal.fire('Apagado', '', 'success')
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
@@ -225,9 +231,10 @@ const Node = ({ match, history }) => {
             allowOutsideClick: () => !Swal.isLoading(),
             preConfirm : () => {
                 return enableProgramNode(dataForm.id)
-                    .then(() => {
+                    .then((output) => {
                         setMode('programar');
-                        Swal.fire('Habilitado', '', 'success')
+                        Swal.fire(output)
+                        //Swal.fire('Habilitado', '', 'success')
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
@@ -246,8 +253,9 @@ const Node = ({ match, history }) => {
             preConfirm : () => {
                 return 
                     turnOnNode(dataForm.id)
-                    .then(() => {
-                        Swal.fire('Deshabilitado', '', 'success')
+                    .then((output) => {
+                        Swal.fire(output)
+                        //Swal.fire('Deshabilitado', '', 'success')
                         setMode('inabilitar');
                     })
                     .catch(error => {
