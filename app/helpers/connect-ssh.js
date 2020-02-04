@@ -88,28 +88,29 @@ export function enableProgramNode(node_id){
         const scheduleArgs = schedule.map((s) => { return `${s.start_day}:${s.start_time} ${s.end_day}:${s.end_time}` }).join(' ')
 
         // comando que se ejecuta
-        const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${scheduleArgs}`
+        const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num} ${scheduleArgs}`
+
+        console.log(shell)
 
         // respuesta esperada para devolver positivo
         const compare = `comando shell`
 
         conn.exec(shell, function(err, stream){
             if (err)
-                throw err;
+                reject(err);
     
             stream.on('data', function(data) {
                 console.log('STDOUT::', data.toString())
                 if(data.toString().localeCompare(compare)){
-                    resolve()
+                    resolve(data.toString())
                 }else{
                     reject('Respuesta no esperada')
                 }
                 
                 stream.end()
+                conn.end()
             });
         })
-
-        conn.end()
     })
 }
 
@@ -240,7 +241,7 @@ export async function pingNode(node_id){
 
         conn.exec(shell, function(err, stream){
             if (err)
-                throw err;
+                reject(err);
 
             stream.on('data', function(data) {
                 console.log('STDOUT::', data.toString())
