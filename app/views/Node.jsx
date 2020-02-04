@@ -64,6 +64,7 @@ const Node = ({ match, history }) => {
                         endTime : moment(data.end).format('HH:mm:ss')
                     }
                 ])
+                setDisabled(true)
             }
         })
     }
@@ -86,6 +87,7 @@ const Node = ({ match, history }) => {
                     1
                 ))
                 setTimers(_timers)
+                setDisabled(true)
             }
         })
     }
@@ -103,6 +105,7 @@ const Node = ({ match, history }) => {
     }
 
     const saveTimers = async (record) => {
+        setDataForm({ ...record.dataValues })
         try {
             for(let i in timers){
                 let timer = {
@@ -387,7 +390,8 @@ const Node = ({ match, history }) => {
                             return moment(selectInfo.start).date() === moment(selectInfo.end).date()
                         }}
                         select={(data) => {
-                            confirmSchedule(data)
+                            if(!disabled)
+                                confirmSchedule(data)
                         }}
                     />
                 </Col>
