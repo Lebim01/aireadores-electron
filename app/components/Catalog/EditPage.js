@@ -43,7 +43,8 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
                 await props.onSave(instance)
 
             Swal.fire('Guardar', 'Guardado correctamente', 'success')
-            goBack()
+
+            if(!props.noRedirect) goBack()
         }catch(err){
             console.error(err)
             Swal.fire('Guardar', `${err.errors.map(({message}) => message).join('<br>')}`, 'error')
@@ -85,7 +86,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
                                 <Button color="secondary" onClick={goBack}>
                                     <FontAwesomeIcon icon={faArrowLeft} /> Regresar
                                 </Button>
-                                <Button color="success" onClick={save}>Guardar</Button>
+                                <Button color="success" onClick={save} {...props.btnSave}>Guardar</Button>
                                 { Number(match.params.id) > 0 &&
                                     <Button color="danger" onClick={remove}>Eliminar</Button>
                                 }
@@ -96,6 +97,11 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             </Container>
         </>
     )
+}
+
+EditPage.defaultProps = {
+    noRedirect : false,
+    btnSave : {}
 }
 
 export default EditPage

@@ -30,6 +30,7 @@ const useTime = () => {
 const Node = ({ match, history }) => {
     const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'encendido' })
     const [mode, setMode] = useState('programar')
+    const [disabled, setDisabled] = useState(false)
     const [timers, setTimers] = useState([])
     const [timersDeleted, setTimersDeleted] = useState([])
     const time = useTime()
@@ -43,6 +44,7 @@ const Node = ({ match, history }) => {
             ...dataForm,
             [e.target.name] : e.target.value
         })
+        setDisabled(true)
     }
 
     const confirmSchedule = (data) => {
@@ -124,7 +126,7 @@ const Node = ({ match, history }) => {
                 await instance.validate()
                 await instance.save()
             }
-            console.log('deleted', timersDeleted)
+            
             for(let i in timersDeleted){
                 let timer = {
                     id : timersDeleted[i].id,
@@ -140,6 +142,8 @@ const Node = ({ match, history }) => {
                     await instance.destroy()
                 }
             }
+
+            setDisabled(false)
         }catch(e){
             throw e
         }
@@ -260,6 +264,7 @@ const Node = ({ match, history }) => {
             match={match}
             history={history}
             onSave={saveTimers}
+            noRedirect
         >
             <Form>
                 <Row>
@@ -378,7 +383,7 @@ const Node = ({ match, history }) => {
 
                         selectable
                         selectAllow={(selectInfo) => {
-                            return moment(selectInfo.end).diff(moment(selectInfo.start)) === 900000
+                            return moment(selectInfo.start).date() === moment(selectInfo.end).date()
                         }}
                         select={(data) => {
                             confirmSchedule(data)
@@ -395,13 +400,13 @@ const Node = ({ match, history }) => {
                                 <Label>{time.format('dddd, HH:mm')}</Label>
                             </Col>
                             <Col xs={12}>
-                                <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => habilitarNodo()}>
+                                <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => habilitarNodo()} disabled={disabled}>
                                     Programar
                                 </Button>
                             </Col>
                             <Col xs={12}>
                                 <br/>
-                                <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => deshabilitarNodo() }>
+                                <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => deshabilitarNodo() } disabled={disabled}>
                                     Inhabilitar
                                 </Button>
                             </Col>
@@ -411,14 +416,15 @@ const Node = ({ match, history }) => {
                                     <legend>Manual</legend>
                                     <Row>
                                         <Col xs={12}>
-                                            <Button block onClick={() => pingNodo()}>
+                                            <Button block onClick={() => pingNodo()} disabled={disabled}>
                                                 Ping
                                             </Button>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col xs={12}>
-                                            <Button block onClick={() => encenderNodo()}>
+                                            <br/>
+                                            <Button block onClick={() => encenderNodo()} disabled={disabled}>
                                                 Encender
                                             </Button>
                                         </Col>
@@ -426,7 +432,7 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block onChange={() => apagarNodo()}>
+                                            <Button block onChange={() => apagarNodo()} disabled={disabled}>
                                                 Apagar
                                             </Button>
                                         </Col>
