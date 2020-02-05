@@ -5,8 +5,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import models from 'models'
 import Swal from 'sweetalert2'
 
-const EditPage = ({ children, match, history, route, model, title, dataForm, setDataForm, ...props }) => {
-
+const EditPage = React.forwardRef(({ children, match, history, route, model, title, dataForm, setDataForm, ...props }, ref) => {
     useEffect(() => {
         async function getDataForm(id){
             const { dataValues } = await models[model].findByPk(id)
@@ -23,7 +22,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
         history.push(route)
     }
 
-    const save = async () => {
+    const save = async (showModal = true) => {
         try {
             const { id, ...fieldsToCreate } = dataForm
 
@@ -42,7 +41,8 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             if(props.onSave)
                 await props.onSave(instance)
 
-            Swal.fire('Guardar', 'Guardado correctamente', 'success')
+            if(showModal)
+                Swal.fire('Guardar', 'Guardado correctamente', 'success')
 
             if(!props.noRedirect) goBack()
         }catch(err){
@@ -71,6 +71,10 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
         }
     }
 
+    ref.current = {
+        save
+    }
+
     return (
         <>
             <Container fluid>
@@ -97,7 +101,7 @@ const EditPage = ({ children, match, history, route, model, title, dataForm, set
             </Container>
         </>
     )
-}
+})
 
 EditPage.defaultProps = {
     noRedirect : false,

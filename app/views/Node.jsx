@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
 import { turnOnNode, pingNode, enableProgramNode } from 'helpers/connect-ssh'
 import moment from 'moment';
@@ -28,12 +28,15 @@ const useTime = () => {
 }
 
 const Node = ({ match, history }) => {
-    const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'encendido' })
-    const [mode, setMode] = useState('programar')
+    const editPage = useRef(null)
+    const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'desconectado' })
     const [disabled, setDisabled] = useState(false)
     const [timers, setTimers] = useState([])
     const [timersDeleted, setTimersDeleted] = useState([])
     const time = useTime()
+
+    /** BUTTONS */
+    const [classBtn, setClassBtn] = useState({})
 
     useEffect(() => {
         getTimers()
@@ -156,6 +159,23 @@ const Node = ({ match, history }) => {
 
     /** SSH METHODS */
 
+    const saveStatus = (status) => {
+        setDataForm({ ...dataForm, status })
+        editPage.current.save(false)
+    }
+
+    const outputs = [
+        { out : 'time out for MSG exceeded', display : "Error: El nodo no responde", fire: '' },
+        { out : 'STATUS_ERROR', display : "Error fatal: Consultar con soporte", fire: 'error' },
+        { out : 'STATUS_OK', display : "Operación ejecutada satisfactoriamente", fire: 'success' }
+    ]
+
+    const showDisplayOutput = (output) => {
+        let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
+        Swal.fire(displayOutput.display, '', displayOutput.fire)
+        return displayOutput.fire === 'success'
+    }
+
     const pingNodo = () => {
         Swal.fire({
             title : 'Connectando',
@@ -166,37 +186,39 @@ const Node = ({ match, history }) => {
                 return pingNode(dataForm.id)
                     .then((output) => {
                         Swal.hideLoading()
-                        Swal.close()
-                        Swal.fire(output)
-                        return output
+                        showDisplayOutput(output)
                     })
                     .catch(error => {
-                        Swal.showValidationMessage(error)
                         Swal.hideLoading()
+                        Swal.showValidationMessage(error)
                     })
             }
-        }).then((output) => {
-            // debugger
-            // Swal.close()
-            // Swal.fire('Resultado', output, 'success')
         })
     }
 
     const encenderNodo = () => {
         Swal.fire({
             title : 'Encender nodo manual',
+            input : 'number',
+            inputAttributes : {
+                placeholder : 'Minutos'
+            },
             text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
             showCancelButton: true,
             allowOutsideClick: () => !Swal.isLoading(),
-            preConfirm : () => {
-                return turnOnNode(dataForm.id)
+            preConfirm : (time) => {
+                return turnOnNode(dataForm.id, time)
                     .then((output) => {
-                        Swal.fire(output)
-                        //Swal.fire('Encendido', '', 'success')
+                        if(showDisplayOutput(output)){
+                            saveStatus('manual')
+                        }else{
+                            saveStatus('desconectado')
+                        }
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
+                        saveStatus('desconectado')
                     })
             }
         })
@@ -212,11 +234,15 @@ const Node = ({ match, history }) => {
             preConfirm : () => {
                 return turnOnNode(dataForm.id)
                     .then((output) => {
-                        Swal.fire(output)
-                        //Swal.fire('Apagado', '', 'success')
+                        if(showDisplayOutput(output)){
+                            saveStatus('desconectado')
+                        }else{
+                            saveStatus('desconectado')
+                        }
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
+                        saveStatus('desconectado')
                     })
             }
         })
@@ -232,12 +258,15 @@ const Node = ({ match, history }) => {
             preConfirm : () => {
                 return enableProgramNode(dataForm.id)
                     .then((output) => {
-                        setMode('programar');
-                        Swal.fire(output)
-                        //Swal.fire('Habilitado', '', 'success')
+                        if(showDisplayOutput(output)){
+                            saveStatus('horario')
+                        }else{
+                            saveStatus('desconectado')
+                        }
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
+                        saveStatus('desconectado')
                     })
             }
         })
@@ -254,17 +283,19 @@ const Node = ({ match, history }) => {
                 return 
                     turnOnNode(dataForm.id)
                     .then((output) => {
-                        Swal.fire(output)
-                        //Swal.fire('Deshabilitado', '', 'success')
-                        setMode('inabilitar');
+                        if(showDisplayOutput(output)){
+                            saveStatus('detenido')
+                        }else{
+                            saveStatus('desconectado')
+                        }
                     })
                     .catch(error => {
                         Swal.showValidationMessage(error)
+                        saveStatus('desconectado')
                     })
             }
         })
     }
-    
 
     return (
         <EditPage
@@ -277,6 +308,7 @@ const Node = ({ match, history }) => {
             history={history}
             onSave={saveTimers}
             noRedirect
+            ref={editPage}
         >
             <Form>
                 <Row>
@@ -375,8 +407,7 @@ const Node = ({ match, history }) => {
 
                         events={timers}
                         eventClick={(data) => {
-                            if(!disabled)
-                                confirmDeleteTimer(timers, data)
+                            confirmDeleteTimer(timers, data)
                         }}
                         eventTextColor="#fff"
 
@@ -399,8 +430,7 @@ const Node = ({ match, history }) => {
                             return moment(selectInfo.start).date() === moment(selectInfo.end).date()
                         }}
                         select={(data) => {
-                            if(!disabled)
-                                confirmSchedule(data)
+                            confirmSchedule(data)
                         }}
                     />
                 </Col>
@@ -414,15 +444,25 @@ const Node = ({ match, history }) => {
                                 <Label>{time.format('dddd, HH:mm')}</Label>
                             </Col>
                             <Col xs={12}>
-                                <Button color={mode === 'programar' ? 'success' : 'secondary'} onClick={() => habilitarNodo()} disabled={disabled}>
-                                    Programar
-                                </Button>
-                            </Col>
-                            <Col xs={12}>
-                                <br/>
-                                <Button color={mode !== 'programar' ? 'danger' : 'secondary'} onClick={() => deshabilitarNodo() } disabled={disabled}>
-                                    Inhabilitar
-                                </Button>
+                                <hr />
+                                <fieldset>
+                                    <legend>Horario</legend>
+                                    <Row>
+                                        <Col xs={12}>
+                                            <Button block color={'success'} onClick={() => habilitarNodo()} disabled={disabled || dataForm.status === 'ejecutar'}>
+                                                Ejecutar
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
+                                            <br/>
+                                            <Button block color={'danger'} onClick={() => deshabilitarNodo() } disabled={disabled || dataForm.status === 'desconectado'}>
+                                                Detener
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </fieldset>
                             </Col>
                             <Col xs={12}>
                                 <hr />
@@ -431,14 +471,14 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <Button block onClick={() => pingNodo()} disabled={disabled}>
-                                                Ping
+                                                Prueba
                                             </Button>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block onClick={() => encenderNodo()} disabled={disabled}>
+                                            <Button block onClick={() => encenderNodo()} disabled={disabled} className="bg-yellow">
                                                 Encender
                                             </Button>
                                         </Col>
@@ -446,8 +486,8 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block onChange={() => apagarNodo()} disabled={disabled}>
-                                                Apagar
+                                            <Button block color={'danger'} onChange={() => apagarNodo()} disabled={disabled || dataForm.status === 'detenido'}>
+                                                Detener
                                             </Button>
                                         </Col>
                                     </Row>

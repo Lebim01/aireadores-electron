@@ -117,7 +117,7 @@ export function enableProgramNode(node_id){
     })
 }
 
-export async function turnOnNode(node_id){
+export async function turnOnNode(node_id, time /** Minutos */){
     return new Promise(async (resolve, reject) => {
         try {
             const { conn, node } = await connectToNode(node_id)
@@ -245,7 +245,7 @@ export function disableNode(node_id){
     })
 }
 
-export async function pingNode(node_id){
+export function pingNode(node_id){
     return new Promise(async (resolve, reject) => {
         try {
             const { conn, node } = await connectToNode(node_id)
@@ -259,7 +259,8 @@ export async function pingNode(node_id){
                 if (err)
                     reject(err);
 
-                stream.on('data', function(data) {
+                stream
+                .on('data', function(data) {
                     console.log('STDOUT::', data.toString())
                     if(data.toString().localeCompare(compare)){
                         resolve(data.toString())
