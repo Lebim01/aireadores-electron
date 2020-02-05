@@ -24,7 +24,16 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
 
     const save = async (showModal = true) => {
         try {
+            Swal.fire('Guardando')
+            Swal.showLoading()
+
             const { id, ...fieldsToCreate } = dataForm
+
+            if(props.onBeforeSave){
+                let valid = await props.onBeforeSave(dataForm)
+                if(!valid)
+                    throw 'No se pudo guardar'
+            }
 
             let instance
             if(id){

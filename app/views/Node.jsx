@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { turnOnNode, pingNode, enableProgramNode } from 'helpers/connect-ssh'
+import { turnOnNode, pingNode, enableProgramNode, saveNode } from 'helpers/connect-ssh'
 import moment from 'moment';
 import 'moment/locale/es'
 import Swal from 'sweetalert2';
@@ -96,6 +96,15 @@ const Node = ({ match, history }) => {
     }
 
     /** SAVE/GET */
+
+    const preSave = async (data) => {
+        try {
+            const output = await saveNode(data)
+            return output.includes('STATUS_OK')
+        }catch(err){
+            return false
+        }
+    }
 
     const getTimers = async () => {
         if(match.params.id){
@@ -334,6 +343,7 @@ const Node = ({ match, history }) => {
             match={match}
             history={history}
             onSave={saveTimers}
+            onBeforeSave={preSave}
             noRedirect
             ref={editPage}
         >
