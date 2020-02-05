@@ -286,7 +286,7 @@ export function saveNode(...data){
             console.log('save node', data)
 
             // comando que se ejecuta
-            const shell = `./aireadores-server/aircontrol.py save `
+            const shell = `python ./aireadores-server/aircontrol.py save `
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 

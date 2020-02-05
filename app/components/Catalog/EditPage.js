@@ -31,8 +31,12 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
 
             if(props.onBeforeSave){
                 let valid = await props.onBeforeSave(dataForm)
-                if(!valid)
+
+                if(typeof valid === 'boolean' && !valid)
                     throw 'No se pudo guardar'
+
+                if(typeof valid === 'object' && !valid.status)
+                    throw valid.message || 'No se pudo guardar'
             }
 
             let instance

@@ -100,9 +100,16 @@ const Node = ({ match, history }) => {
     const preSave = async (data) => {
         try {
             const output = await saveNode(data)
-            return output.includes('STATUS_OK')
+            let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
+            return {
+                message : displayOutput.display,
+                status : displayOutput.fire === 'success'
+            }
         }catch(err){
-            return false
+            return {
+                status : false,
+                message: err
+            }
         }
     }
 
