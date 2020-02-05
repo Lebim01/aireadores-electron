@@ -170,6 +170,13 @@ const Node = ({ match, history }) => {
         { out : 'STATUS_OK', display : "Operación ejecutada satisfactoriamente", fire: 'success' }
     ]
 
+    const statuses = [
+        { status : 'desconectado', font : '' },
+        { status : 'horario', font : 'text-success' },
+        { status : 'detener', font : 'text-danger' },
+        { status : 'manual', font : 'text-warning' },
+    ]
+
     const showDisplayOutput = (output) => {
         let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
         Swal.fire(displayOutput.display, '', displayOutput.fire)
@@ -186,11 +193,14 @@ const Node = ({ match, history }) => {
                 return pingNode(dataForm.id)
                     .then((output) => {
                         Swal.hideLoading()
-                        showDisplayOutput(output)
+                        if(!showDisplayOutput(output)){
+                            saveStatus('desconectado')
+                        }
                     })
                     .catch(error => {
                         Swal.hideLoading()
                         Swal.showValidationMessage(error)
+                        saveStatus('desconectado')
                     })
             }
         })
@@ -384,7 +394,9 @@ const Node = ({ match, history }) => {
                         <FormGroup row>
                             <Label sm={3}>Estado</Label>
                             <Col sm={9} lg={6}>
-                                <label>{dataForm.status}</label>
+                                <label className={statuses.find(row => dataForm.status === row.status).font}>
+                                    {dataForm.status}
+                                </label>
                             </Col>
                         </FormGroup>
                     </Col>
