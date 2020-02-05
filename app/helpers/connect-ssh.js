@@ -79,17 +79,8 @@ export function enableProgramNode(node_id){
         try {
             const { conn, node } = await connectToNode(node_id)
 
-            const schedule = await models.timer.findAll({ where: { node_id }, order: [ ['start_day'], ['start_time'] ] })
-
-            if (!schedule || schedule.length < 1) {
-                reject('No hay horarios registrados. Guarde la configuración primero')
-            }
-
-            // "1:00:00:00 1:00:15:00 1:01:00:00 1:01:15:00 1:02:30:00 1:02:45:00 4:03:15:00 4:03:30:00 6:04:30:00 6:04:45:00"
-            const scheduleArgs = schedule.map((s) => { return `${s.start_day}:${s.start_time} ${s.end_day}:${s.end_time}` }).join(' ')
-
             // comando que se ejecuta
-            const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num} ${scheduleArgs}`
+            const shell = `./aireadores-server/aircontrol.py run_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num}`
 
             console.log(shell)
 
