@@ -284,7 +284,7 @@ export function pingNode(node_id){
     })
 }
 
-export function saveNode(...data){
+export function saveNode(data, timers){
     return new Promise(async (resolve, reject) => {
         try {
             const conn = await connectToRasberry()

@@ -99,7 +99,7 @@ const Node = ({ match, history }) => {
 
     const preSave = async (data) => {
         try {
-            const output = await saveNode(data)
+            const output = await saveNode(data, timers.map(timerFullcalendarToModel))
             let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
             return {
                 message : displayOutput.display,
@@ -113,15 +113,29 @@ const Node = ({ match, history }) => {
         }
     }
 
+    const timerFullcalendarToModel = (timer) => {
+        return {
+            id : timer.id,
+            start_day : timer.daysOfWeek[0],
+            start_time : timerstartTime,
+            end_day : timer.daysOfWeek[0],
+            end_time : timer.endTime
+        }
+    }
+
+    const timerModelToFullcalendar = (timer) => {
+        return {
+            id : record.id,
+            daysOfWeek : [ record.start_day ],
+            startTime : record.start_time,
+            endTime : record.end_time
+        }
+    }
+
     const getTimers = async () => {
         if(match.params.id){
             const result = await models.timer.findAll({ where : { node_id : match.params.id } })
-            setTimers(result.map(record => ({
-                id : record.id,
-                daysOfWeek : [ record.start_day ],
-                startTime : record.start_time,
-                endTime : record.end_time
-            })))
+            setTimers(result.map(record => timerModelToFullcalendar(record)))
         }
     }
 
@@ -129,13 +143,7 @@ const Node = ({ match, history }) => {
         setDataForm({ ...record.dataValues })
         try {
             for(let i in timers){
-                let timer = {
-                    id : timers[i].id,
-                    start_day : timers[i].daysOfWeek[0],
-                    start_time : timers[i].startTime,
-                    end_day : timers[i].daysOfWeek[0],
-                    end_time : timers[i].endTime
-                }
+                let timer = timerFullcalendarToModel(timers[i])
 
                 let instance
                 if(timer.id){
@@ -154,13 +162,7 @@ const Node = ({ match, history }) => {
             }
             
             for(let i in timersDeleted){
-                let timer = {
-                    id : timersDeleted[i].id,
-                    start_day : timersDeleted[i].daysOfWeek[0],
-                    start_time : timersDeleted[i].startTime,
-                    end_day : timersDeleted[i].daysOfWeek[0],
-                    end_time : timersDeleted[i].endTime
-                }
+                let timer = timerFullcalendarToModel(timersDeleted[i])
 
                 let instance
                 if(timer.id){
