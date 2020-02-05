@@ -29,7 +29,7 @@ const Ssh = ({ history, location }) => {
                                     <Col xs="4">
                                         Psicina
                                         <SelectAsync query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={(e) => setPoolId(e.target.value)} value={poolId}>
-                                            <option value="">Seleccione</option>
+                                            <option value="">Todas</option>
                                         </SelectAsync>
                                     </Col>
                                 </Row>
