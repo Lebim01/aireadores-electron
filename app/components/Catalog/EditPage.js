@@ -60,7 +60,10 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
             if(!props.noRedirect) goBack()
         }catch(err){
             console.error(err)
-            Swal.fire('Guardar', `${err.errors.map(({message}) => message).join('<br>')}`, 'error')
+            if(err.errors)
+                Swal.fire('Guardar', `${err.errors.map(({message}) => message).join('<br>')}`, 'error')
+            else
+                Swal.fire('Guardar', err, 'error')
         }
     }
 
