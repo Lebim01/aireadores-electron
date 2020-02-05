@@ -89,7 +89,9 @@ export function enableProgramNode(node_id){
             const scheduleArgs = schedule.map((s) => { return `${s.start_day}:${s.start_time} ${s.end_day}:${s.end_time}` }).join(' ')
 
             // comando que se ejecuta
-            const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${scheduleArgs}`
+            const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num} ${scheduleArgs}`
+
+            console.log(shell)
 
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
@@ -219,7 +221,10 @@ export function disableNode(node_id){
             const { conn, node } = await connectToNode(node_id)
 
             // comando que se ejecuta
-            const shell = `echo inabilitar --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+            const shell = `./aireadores-server/aircontrol.py stop ${node.address} ${node.channel} ${node.device_id} ${node.role} 12`
+
+            console.log(shell)
+
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 
