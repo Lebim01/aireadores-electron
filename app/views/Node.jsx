@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { turnOnNode, pingNode, enableProgramNode, saveNode } from 'helpers/connect-ssh'
+import { turnOnNode, pingNode, enableProgramNode, saveNode, disableNode } from 'helpers/connect-ssh'
 import moment from 'moment';
 import 'moment/locale/es'
 import Swal from 'sweetalert2';
@@ -322,8 +322,7 @@ const Node = ({ match, history }) => {
         }).then(({value}) => {
             if(value){
                 modalLoading('Deshabilitar programa nodo', '', () => {
-                    return 
-                        turnOnNode(dataForm.id)
+                    return disableNode(dataForm.id)
                         .then((output) => {
                             if(showDisplayOutput(output)){
                                 saveStatus('detenido')
