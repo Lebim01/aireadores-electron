@@ -133,6 +133,8 @@ const Node = ({ match, history }) => {
                 }
                 await instance.validate()
                 await instance.save()
+
+                timers[i].id = instance.dataValues.id
             }
             
             for(let i in timersDeleted){
