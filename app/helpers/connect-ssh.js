@@ -289,7 +289,7 @@ export function saveNode(data, timers){
         try {
             const conn = await connectToRasberry()
 
-            console.log('save node', data)
+            console.log('save node', data, timers)
 
             // comando que se ejecuta
             const shell = `python ./aireadores-server/aircontrol.py save `

@@ -117,7 +117,7 @@ const Node = ({ match, history }) => {
         return {
             id : timer.id,
             start_day : timer.daysOfWeek[0],
-            start_time : timerstartTime,
+            start_time : timer.startTime,
             end_day : timer.daysOfWeek[0],
             end_time : timer.endTime
         }
@@ -125,10 +125,10 @@ const Node = ({ match, history }) => {
 
     const timerModelToFullcalendar = (timer) => {
         return {
-            id : record.id,
-            daysOfWeek : [ record.start_day ],
-            startTime : record.start_time,
-            endTime : record.end_time
+            id : timer.id,
+            daysOfWeek : [ timer.start_day ],
+            startTime : timer.start_time,
+            endTime : timer.end_time
         }
     }
 
