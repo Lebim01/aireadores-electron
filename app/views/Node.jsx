@@ -99,7 +99,7 @@ const Node = ({ match, history }) => {
 
     const preSave = async (data) => {
         try {
-            const output = await saveNode(data, timers.map(timerFullcalendarToModel))
+            const output = await saveNode(data, timers)
             let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
             return {
                 message : displayOutput.display,
