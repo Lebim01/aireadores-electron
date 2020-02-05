@@ -394,7 +394,7 @@ const Node = ({ match, history }) => {
                         <FormGroup row>
                             <Label sm={3}>Estado</Label>
                             <Col sm={9} lg={6}>
-                                <label className={statuses.find(row => dataForm.status === row.status).font}>
+                                <label className={(statuses.find(row => dataForm.status === row.status) ||  {}).font}>
                                     {dataForm.status}
                                 </label>
                             </Col>
