@@ -71,8 +71,10 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
         }
     }
 
-    ref.current = {
-        save
+    if(ref){
+        ref.current = {
+            save
+        }
     }
 
     return (
