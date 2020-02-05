@@ -244,7 +244,7 @@ const Node = ({ match, history }) => {
         }).then(({value}) => {
             if(value){
                 modalLoading('Encender nodo manualmente', '', () => {
-                    return turnOnNode(dataForm.id, time)
+                    return turnOnNode(dataForm.id, value)
                     .then((output) => {
                         if(showDisplayOutput(output)){
                             saveStatus('manual')
