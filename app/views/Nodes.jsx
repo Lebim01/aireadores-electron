@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -8,8 +8,13 @@ import {
   CardBody
 } from "reactstrap";
 import { TableAsync } from 'components/Catalog'
+import models from 'models'
+import SelectAsync from 'components/SelectAsync'
 
 const Ssh = ({ history, location }) => {
+
+    const [poolId, setPoolId] = useState('')
+
     return (
         <>
             <Container fluid>
@@ -20,15 +25,29 @@ const Ssh = ({ history, location }) => {
                                 Listado de nodos
                             </CardHeader>
                             <CardBody>
+                                <Row>
+                                    <Col xs="4">
+                                        Psicina
+                                        <SelectAsync query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={(e) => setPoolId(e.target.value)} value={poolId}>
+                                            <option>Seleccione</option>
+                                        </SelectAsync>
+                                    </Col>
+                                </Row>
                                 <TableAsync
                                     query={{
-                                        model : 'node'
+                                        model : 'node',
+                                        include : [
+                                            { model : models.pool }
+                                        ],
+                                        where : {
+                                            pool_id : poolId
+                                        }
                                     }}
                                     header={[
-                                        ['Nodo', 'Aireadores', 'Estado']
+                                        ['Piscina', 'Nodo', 'Aireadores', 'Estado']
                                     ]}
                                     body={[
-                                        'address', 'num', 'status'
+                                        'pool.name', 'address', 'num', 'status'
                                     ]}
                                     history={history}
                                     location={location}

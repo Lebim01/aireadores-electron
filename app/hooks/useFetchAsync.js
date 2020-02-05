@@ -10,7 +10,7 @@ export default function useFetchAsync({ model, ...query }) {
         if(query){
             setLoading(true)
 
-            models[model].findAll(query)
+            models[model].findAll({ ...query, raw: true })
             .then(result => {
                 setData(result)
             })
@@ -21,7 +21,7 @@ export default function useFetchAsync({ model, ...query }) {
                 setLoading(false)
             })
         }
-    }, []);
+    }, [query.where, query.order]);
 
     return {
         error,
