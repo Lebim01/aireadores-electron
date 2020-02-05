@@ -125,7 +125,8 @@ export async function turnOnNode(node_id, time /** Minutos */){
             const { conn, node } = await connectToNode(node_id)
 
             // comando que se ejecuta
-            const shell = `echo encender --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+            const shell = `./aireadores-server/aircontrol.py run_timer ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num} ${time}`
+            console.log(shell)
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 
