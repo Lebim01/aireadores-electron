@@ -181,30 +181,37 @@ const Node = ({ match, history }) => {
 
     const showDisplayOutput = (output) => {
         let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
+        console.log(displayOutput)
         Swal.fire(displayOutput.display, '', displayOutput.fire)
         return displayOutput.fire === 'success'
     }
 
-    const pingNodo = () => {
+    const modalLoading = (title, text, execute) => {
         Swal.fire({
-            title : 'Connectando',
-            text : 'Ejecutando ping...',
+            title : title,
+            text : text,
             allowOutsideClick: () => !Swal.isLoading(),
             onBeforeOpen : () => {
                 Swal.showLoading()
-                return pingNode(dataForm.id)
-                    .then((output) => {
-                        Swal.hideLoading()
-                        if(!showDisplayOutput(output)){
-                            saveStatus('desconectado')
-                        }
-                    })
-                    .catch(error => {
-                        Swal.hideLoading()
-                        Swal.showValidationMessage(error)
-                        saveStatus('desconectado')
-                    })
+                return execute()
             }
+        })
+    }
+
+    const pingNodo = () => {
+        modalLoading('Conectando', 'Ejecutando ping...', () => {
+            return pingNode(dataForm.id)
+            .then((output) => {
+                Swal.hideLoading()
+                if(!showDisplayOutput(output)){
+                    saveStatus('desconectado')
+                }
+            })
+            .catch(error => {
+                Swal.hideLoading()
+                Swal.showValidationMessage(error)
+                saveStatus('desconectado')
+            })
         })
     }
 
@@ -217,10 +224,11 @@ const Node = ({ match, history }) => {
             },
             text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
-            showCancelButton: true,
-            allowOutsideClick: () => !Swal.isLoading(),
-            preConfirm : (time) => {
-                return turnOnNode(dataForm.id, time)
+            showCancelButton: true
+        }).then(({value}) => {
+            if(value){
+                modalLoading('Encender nodo manualmente', '', () => {
+                    return turnOnNode(dataForm.id, time)
                     .then((output) => {
                         if(showDisplayOutput(output)){
                             saveStatus('manual')
@@ -232,6 +240,7 @@ const Node = ({ match, history }) => {
                         Swal.showValidationMessage(error)
                         saveStatus('desconectado')
                     })
+                })
             }
         })
     }
@@ -242,9 +251,10 @@ const Node = ({ match, history }) => {
             text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
             showCancelButton: true,
-            allowOutsideClick: () => !Swal.isLoading(),
-            preConfirm : () => {
-                return turnOnNode(dataForm.id)
+        }).then(({value}) => {
+            if(value){
+                modalLoading('Apagar nodo manualmente', '', () => {
+                    return turnOnNode(dataForm.id)
                     .then((output) => {
                         if(showDisplayOutput(output)){
                             saveStatus('desconectado')
@@ -256,6 +266,7 @@ const Node = ({ match, history }) => {
                         Swal.showValidationMessage(error)
                         saveStatus('desconectado')
                     })
+                })
             }
         })
     }
@@ -266,9 +277,10 @@ const Node = ({ match, history }) => {
             text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
             showCancelButton: true,
-            allowOutsideClick: () => !Swal.isLoading(),
-            preConfirm : () => {
-                return enableProgramNode(dataForm.id)
+        }).then(({ value }) => {
+            if(value){
+                modalLoading('Habilitando modo horario', '', () => {
+                    return enableProgramNode(dataForm.id)
                     .then((output) => {
                         if(showDisplayOutput(output)){
                             saveStatus('horario')
@@ -280,6 +292,7 @@ const Node = ({ match, history }) => {
                         Swal.showValidationMessage(error)
                         saveStatus('desconectado')
                     })
+                })
             }
         })
     }
@@ -289,22 +302,24 @@ const Node = ({ match, history }) => {
             title : 'Deshabilitar programa nodo',
             text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
-            showCancelButton: true,
-            allowOutsideClick: () => !Swal.isLoading(),
-            preConfirm : () => {
-                return 
-                    turnOnNode(dataForm.id)
-                    .then((output) => {
-                        if(showDisplayOutput(output)){
-                            saveStatus('detenido')
-                        }else{
+            showCancelButton: true
+        }).then(({value}) => {
+            if(value){
+                modalLoading('Deshabilitar programa nodo', '', () => {
+                    return 
+                        turnOnNode(dataForm.id)
+                        .then((output) => {
+                            if(showDisplayOutput(output)){
+                                saveStatus('detenido')
+                            }else{
+                                saveStatus('desconectado')
+                            }
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(error)
                             saveStatus('desconectado')
-                        }
-                    })
-                    .catch(error => {
-                        Swal.showValidationMessage(error)
-                        saveStatus('desconectado')
-                    })
+                        })
+                })
             }
         })
     }
