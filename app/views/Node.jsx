@@ -197,7 +197,6 @@ const Node = ({ match, history }) => {
 
     const showDisplayOutput = (output) => {
         let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
-        console.log(displayOutput)
         Swal.fire(displayOutput.display, '', displayOutput.fire)
         return displayOutput.fire === 'success'
     }
