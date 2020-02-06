@@ -293,7 +293,7 @@ const Node = ({ match, history }) => {
             title : 'Habilitar programa nodo',
             html:
                 '<input id="swal-input1" class="swal2-input" placeholder="Minutos" type="number">' +
-                '<input id="swal-input2" class="swal2-input" placeholder="Aireadores" type="number">',
+                '<input id="swal-input2" class="swal2-input" placeholder="Aireadores" type="number" value="'+dataForm.num+'">',
             showLoaderOnConfirm: true,
             showCancelButton: true,
             preConfirm: () => {
