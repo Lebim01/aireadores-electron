@@ -24,7 +24,7 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
 
     const save = async (showModal = true) => {
         try {
-            Swal.fire('Guardando')
+            Swal.fire('Guardando...')
             Swal.showLoading()
 
             const { id, ...fieldsToCreate } = dataForm
