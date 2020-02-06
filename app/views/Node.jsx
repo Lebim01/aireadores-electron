@@ -30,10 +30,11 @@ const useTime = () => {
 const Node = ({ match, history }) => {
     const editPage = useRef(null)
     const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'desconectado' })
-    const [disabled, setDisabled] = useState(false)
-    const [timers, setTimers] = useState([])
-    const [timersDeleted, setTimersDeleted] = useState([])
+    const [disabled, setDisabled] = useState(false) // Disable actions buttons
+    const [timers, setTimers] = useState([]) // Visual timers data
+    const [timersDeleted, setTimersDeleted] = useState([]) // Visual timers deleted
     const time = useTime()
+    const readOnly = dataForm.status === 'horario' || dataForm.status === 'manual' // Readonly form
 
     /** BUTTONS */
     const [classBtn, setClassBtn] = useState({})
@@ -387,6 +388,7 @@ const Node = ({ match, history }) => {
                                     name="address"
                                     onChange={onChange}
                                     value={dataForm.address}
+                                    disabled={readOnly}
                                 />
                             </Col>
                         </FormGroup>
@@ -400,6 +402,7 @@ const Node = ({ match, history }) => {
                                     name="num"
                                     onChange={onChange}
                                     value={dataForm.num}
+                                    disabled={readOnly}
                                 />
                             </Col>
                         </FormGroup>
@@ -416,6 +419,7 @@ const Node = ({ match, history }) => {
                                     name="channel"
                                     onChange={onChange}
                                     value={dataForm.channel}
+                                    disabled={readOnly}
                                 />
                             </Col>
                         </FormGroup>
@@ -424,7 +428,7 @@ const Node = ({ match, history }) => {
                         <FormGroup row>
                             <Label sm={3}>Piscina</Label>
                             <Col sm={9} lg={6}>
-                                <SelectAsync name="pool_id" query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={onChange} value={dataForm.pool_id}>
+                                <SelectAsync name="pool_id" query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={onChange} value={dataForm.pool_id} disabled={readOnly}>
                                     <option>Seleccione</option>
                                 </SelectAsync>
                             </Col>
@@ -442,6 +446,7 @@ const Node = ({ match, history }) => {
                                     name="device_id"
                                     onChange={onChange}
                                     value={dataForm.device_id}
+                                    disabled={readOnly}
                                 />
                             </Col>
                         </FormGroup>

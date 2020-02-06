@@ -22,44 +22,53 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
         history.push(route)
     }
 
-    const save = async (showModal = true) => {
-        try {
+    const preSave = async () => {
+        if(props.onBeforeSave){
             Swal.fire('Guardando...')
             Swal.showLoading()
 
-            const { id, ...fieldsToCreate } = dataForm
+            let valid = await props.onBeforeSave(dataForm)
 
-            if(props.onBeforeSave){
-                let valid = await props.onBeforeSave(dataForm)
+            if(typeof valid === 'boolean' && !valid)
+                throw 'No se pudo guardar'
 
-                if(typeof valid === 'boolean' && !valid)
-                    throw 'No se pudo guardar'
+            if(typeof valid === 'object' && !valid.status)
+                throw valid.message || 'No se pudo guardar'
 
-                if(typeof valid === 'object' && !valid.status)
-                    throw valid.message || 'No se pudo guardar'
-            }
+            return valid
+        }
+    }
 
-            let instance
-            if(id){
-                instance = await models[model].findByPk(id)
-                Object.assign(instance, fieldsToCreate)
-                await instance.validate()
-                await instance.save()
-            }else{
-                instance = models[model].build(fieldsToCreate)
-                await instance.validate()
-                await instance.save()
-            }
+    const save = async () => {
+        const { id, ...fieldsToCreate } = dataForm
 
-            if(props.onSave)
-                await props.onSave(instance)
+        let instance
+        if(id){
+            instance = await models[model].findByPk(id)
+            Object.assign(instance, fieldsToCreate)
+            await instance.validate()
+            await instance.save()
+        }else{
+            instance = models[model].build(fieldsToCreate)
+            await instance.validate()
+            await instance.save()
+        }
+
+        if(props.onSave)
+            await props.onSave(instance)
+    }
+
+    const completeSave = async (showModal = true) => {
+        try {
+            await preSave()
+            await save()
 
             if(showModal)
                 Swal.fire('Guardar', 'Guardado correctamente', 'success')
 
             if(!props.noRedirect) goBack()
-        }catch(err){
-            console.error(err)
+        }
+        catch(err){
             if(err.errors)
                 Swal.fire('Guardar', `${err.errors.map(({message}) => message).join('<br>')}`, 'error')
             else
@@ -89,7 +98,11 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
 
     if(ref){
         ref.current = {
-            save
+            save,
+            preSave,
+            completeSave,
+            remove,
+            goBack
         }
     }
 
@@ -108,7 +121,7 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
                                 <Button color="secondary" onClick={goBack}>
                                     <FontAwesomeIcon icon={faArrowLeft} /> Regresar
                                 </Button>
-                                <Button color="success" onClick={save} {...props.btnSave}>Guardar</Button>
+                                <Button color="success" onClick={completeSave} {...props.btnSave}>Guardar</Button>
                                 { Number(match.params.id) > 0 &&
                                     <Button color="danger" onClick={remove}>Eliminar</Button>
                                 }
