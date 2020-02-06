@@ -480,7 +480,8 @@ const Node = ({ match, history }) => {
 
                         events={timers}
                         eventClick={(data) => {
-                            confirmDeleteTimer(timers, data)
+                            if(!readOnly)
+                                confirmDeleteTimer(timers, data)
                         }}
                         eventTextColor="#fff"
 
@@ -503,7 +504,8 @@ const Node = ({ match, history }) => {
                             return moment(selectInfo.start).date() === moment(selectInfo.end).date()
                         }}
                         select={(data) => {
-                            confirmSchedule(data)
+                            if(!readOnly)
+                                confirmSchedule(data)
                         }}
                     />
                 </Col>
