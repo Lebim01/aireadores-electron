@@ -74,7 +74,7 @@ export function connectToNode(node_id){
     })
 }
 
-export function enableProgramNode(node_id, minutes, quantity){
+export function enableProgramNode(node_id){
     return new Promise(async (resolve, reject) => {
         try {
             const { conn, node } = await connectToNode(node_id)
@@ -110,7 +110,7 @@ export function enableProgramNode(node_id, minutes, quantity){
     })
 }
 
-export async function turnOnNode(node_id, time /** Minutos */){
+export async function turnOnNode(node_id, time, quantity){
     return new Promise(async (resolve, reject) => {
         try {
             const { conn, node } = await connectToNode(node_id)

@@ -236,29 +236,48 @@ const Node = ({ match, history }) => {
     const encenderNodo = () => {
         Swal.fire({
             title : 'Encender nodo manual',
-            input : 'number',
-            inputAttributes : {
-                placeholder : 'Minutos'
-            },
+            html:
+                '<input id="swal-input1" class="swal2-input" placeholder="Minutos" type="number">' +
+                '<input id="swal-input2" class="swal2-input" placeholder="Aireadores" type="number" value="'+dataForm.num+'">',
             text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
-            showCancelButton: true
+            showCancelButton: true,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input1').value,
+                    document.getElementById('swal-input2').value
+                ]
+            }
         }).then(({value}) => {
-            if(value){
-                modalLoading('Encender nodo manualmente', '', () => {
-                    return turnOnNode(dataForm.id, value)
-                    .then((output) => {
-                        if(showDisplayOutput(output)){
-                            saveStatus('manual')
-                        }else{
+            if(value !== undefined){
+                const minutos = value[0]
+                const aireadores = value[1]
+
+                if(!minutos){
+                    Swal.fire('', 'La cantidad de minutos es requerida', 'error')
+                }
+                else if(!aireadores){
+                    Swal.fire('', 'La cantidad de aireadores es requerida', 'error')
+                }
+                else if(aireadores > dataForm.num){
+                    Swal.fire('', 'La cantidad maxima de aireadores es ' + dataForm.num, 'error')
+                }
+                else {
+                    modalLoading('Encender nodo manualmente', '', () => {
+                        return turnOnNode(dataForm.id, minutos, aireadores)
+                        .then((output) => {
+                            if(showDisplayOutput(output)){
+                                saveStatus('manual')
+                            }else{
+                                saveStatus('desconectado')
+                            }
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(error)
                             saveStatus('desconectado')
-                        }
+                        })
                     })
-                    .catch(error => {
-                        Swal.showValidationMessage(error)
-                        saveStatus('desconectado')
-                    })
-                })
+                }
             }
         })
     }
@@ -292,47 +311,25 @@ const Node = ({ match, history }) => {
     const habilitarNodo = () => {
         Swal.fire({
             title : 'Habilitar programa nodo',
-            html:
-                '<input id="swal-input1" class="swal2-input" placeholder="Minutos" type="number">' +
-                '<input id="swal-input2" class="swal2-input" placeholder="Aireadores" type="number" value="'+dataForm.num+'">',
+            text : 'Presionar OK para continuar',
             showLoaderOnConfirm: true,
             showCancelButton: true,
-            preConfirm: () => {
-                return [
-                    document.getElementById('swal-input1').value,
-                    document.getElementById('swal-input2').value
-                ]
-            }
         }).then(({ value }) => {
-            if(value !== undefined){
-                const minutos = value[0]
-                const aireadores = value[1]
-
-                if(!minutos){
-                    Swal.fire('', 'La cantidad de minutos es requerida', 'error')
-                }
-                else if(!aireadores){
-                    Swal.fire('', 'La cantidad de aireadores es requerida', 'error')
-                }
-                else if(aireadores > dataForm.num){
-                    Swal.fire('', 'La cantidad maxima de aireadores es ' + dataForm.num, 'error')
-                }
-                else {
-                    modalLoading('Habilitando modo horario', '', () => {
-                        return enableProgramNode(dataForm.id, minutos, aireadores)
-                        .then((output) => {
-                            if(showDisplayOutput(output)){
-                                saveStatus('horario')
-                            }else{
-                                saveStatus('desconectado')
-                            }
-                        })
-                        .catch(error => {
-                            Swal.showValidationMessage(error)
+            if(value){
+                modalLoading('Habilitando modo horario', '', () => {
+                    return enableProgramNode(dataForm.id)
+                    .then((output) => {
+                        if(showDisplayOutput(output)){
+                            saveStatus('horario')
+                        }else{
                             saveStatus('desconectado')
-                        })
+                        }
                     })
-                }
+                    .catch(error => {
+                        Swal.showValidationMessage(error)
+                        saveStatus('desconectado')
+                    })
+                })
             }
         })
     }
