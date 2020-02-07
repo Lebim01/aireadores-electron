@@ -236,6 +236,10 @@ export function disableNode(node_id){
                     
                     stream.end()
                     conn.end()
+                }).stderr.on('data', function(data) {
+                    reject(data.toString())
+                    stream.end()
+                    conn.end()
                 });
             })
         }catch(err){
