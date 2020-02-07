@@ -110,13 +110,13 @@ export function enableProgramNode(node_id){
     })
 }
 
-export async function turnOnNode(node_id, time, quantity){
+export async function turnOnNode(node_id, time, num){
     return new Promise(async (resolve, reject) => {
         try {
             const { conn, node } = await connectToNode(node_id)
 
             // comando que se ejecuta
-            const shell = `python ./aireadores-server/aircontrol.py run_timer ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num} ${time}`
+            const shell = `./aireadores-server/aircontrol.py run_timer ${node.address} ${node.channel} ${node.device_id} ${node.role} ${num} ${time}`
             console.log(shell)
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
@@ -150,6 +150,7 @@ export function turnOffNode(node_id){
 
             // comando que se ejecuta
             const shell = `echo apagar --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+            console.log(shell)
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 
@@ -182,6 +183,7 @@ export function enableNode(node_id){
 
             // comando que se ejecuta
             const shell = `echo programar --address ${node.address} --channel ${node.channel} --role ${node.role} --num ${node.num} --rssi ${node.rssi}`
+            console.log(shell)
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 
