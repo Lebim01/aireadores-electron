@@ -214,9 +214,9 @@ const Node = ({ match, history }) => {
             allowOutsideClick: () => !Swal.isLoading(),
             onBeforeOpen : () => {
                 Swal.showLoading()
-                return execute()
+                return execute().then(() => Swal.hideLoading()).catch(() => Swal.hideLoading())
             }
-        }).catch(() => Swal.hideLoading())
+        })
     }
 
     const pingNodo = () => {
