@@ -216,7 +216,7 @@ const Node = ({ match, history }) => {
                 Swal.showLoading()
                 return execute()
             }
-        })
+        }).catch(() => Swal.hideLoading())
     }
 
     const pingNodo = () => {
