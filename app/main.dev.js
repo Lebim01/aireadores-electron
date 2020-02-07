@@ -10,10 +10,11 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, remote } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import EventEmitter from 'events'
 
 export default class AppUpdater {
   constructor() {
@@ -63,6 +64,8 @@ const createWindow = async () => {
       nodeIntegration: true
     }
   });
+
+  global['sequelize-emitter'] = new EventEmitter()
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 

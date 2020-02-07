@@ -12,6 +12,9 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction';
 
+const globalTimeout = require('electron').remote.getGlobal('setTimeout')
+const emitter = require('electron').remote.getGlobal('sequelize-emitter')
+
 const useTime = () => {
     const [time, setTime] = useState(moment())
 
@@ -192,10 +195,10 @@ const Node = ({ match, history }) => {
     ]
 
     const statuses = [
-        { status : 'desconectado', font : '' },
-        { status : 'horario', font : 'text-success' },
-        { status : 'detener', font : 'text-danger' },
-        { status : 'manual', font : 'text-warning' },
+        { status : 'desconectado', font : '', method : turnOnNode },
+        { status : 'horario', font : 'text-success', method : enableProgramNode },
+        { status : 'detenido', font : 'text-danger', method : disableNode },
+        { status : 'manual', font : 'text-yellow' },
     ]
 
     const showDisplayOutput = (output) => {
@@ -267,6 +270,7 @@ const Node = ({ match, history }) => {
                         return turnOnNode(dataForm.id, minutos, aireadores)
                         .then((output) => {
                             if(showDisplayOutput(output)){
+                                devolverEstadoAnterior(minutos, dataForm.status)
                                 saveStatus('manual')
                             }else{
                                 saveStatus('desconectado')
@@ -291,18 +295,18 @@ const Node = ({ match, history }) => {
         }).then(({value}) => {
             if(value){
                 modalLoading('Apagar nodo manualmente', '', () => {
-                    return turnOnNode(dataForm.id)
-                    .then((output) => {
-                        if(showDisplayOutput(output)){
+                    return cambiarEstado('desconectado')
+                        .then((output) => {
+                            if(showDisplayOutput(output)){
+                                saveStatus('desconectado')
+                            }else{
+                                saveStatus('desconectado')
+                            }
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(error)
                             saveStatus('desconectado')
-                        }else{
-                            saveStatus('desconectado')
-                        }
-                    })
-                    .catch(error => {
-                        Swal.showValidationMessage(error)
-                        saveStatus('desconectado')
-                    })
+                        })
                 })
             }
         })
@@ -317,18 +321,18 @@ const Node = ({ match, history }) => {
         }).then(({ value }) => {
             if(value){
                 modalLoading('Habilitando modo horario', '', () => {
-                    return enableProgramNode(dataForm.id)
-                    .then((output) => {
-                        if(showDisplayOutput(output)){
-                            saveStatus('horario')
-                        }else{
+                    return cambiarEstado('horario')
+                        .then((output) => {
+                            if(showDisplayOutput(output)){
+                                saveStatus('horario')
+                            }else{
+                                saveStatus('desconectado')
+                            }
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(error)
                             saveStatus('desconectado')
-                        }
-                    })
-                    .catch(error => {
-                        Swal.showValidationMessage(error)
-                        saveStatus('desconectado')
-                    })
+                        })
                 })
             }
         })
@@ -343,7 +347,7 @@ const Node = ({ match, history }) => {
         }).then(({value}) => {
             if(value){
                 modalLoading('Deshabilitar programa nodo', '', () => {
-                    return disableNode(dataForm.id)
+                    return cambiarEstado('detenido')
                         .then((output) => {
                             if(showDisplayOutput(output)){
                                 saveStatus('detenido')
@@ -356,6 +360,34 @@ const Node = ({ match, history }) => {
                             saveStatus('desconectado')
                         })
                 })
+            }
+        })
+    }
+
+    const devolverEstadoAnterior = async (minutos, prevStatus) => {
+        globalTimeout(async () => {
+            try {
+                await models.node.update({ status: prevStatus }, { where : { id : dataForm.id } })
+                emitter.emit('node-refresh')
+            }
+            catch(err){
+
+            }
+        }, minutos * 60 * 1000)
+    }
+
+    const cambiarEstado = (toStatus) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const _toStatus = statuses.find(row => row.status === toStatus)
+                if(_toStatus){
+                    const res = await _toStatus.method(dataForm.id)
+                    resolve(res)
+                }else{
+                    throw new Error('Estado desconocido')
+                }
+            }catch(err){
+                reject(err)
             }
         })
     }
@@ -521,7 +553,7 @@ const Node = ({ match, history }) => {
                                     <legend>Horario</legend>
                                     <Row>
                                         <Col xs={12}>
-                                            <Button block color={'success'} onClick={() => habilitarNodo()} disabled={disabled || dataForm.status === 'ejecutar'}>
+                                            <Button block color={'success'} onClick={() => habilitarNodo()} disabled={disabled || dataForm.status === 'horario'}>
                                                 Ejecutar
                                             </Button>
                                         </Col>
@@ -529,7 +561,7 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block color={'danger'} onClick={() => deshabilitarNodo() } disabled={disabled || dataForm.status === 'desconectado'}>
+                                            <Button block color={'danger'} onClick={() => deshabilitarNodo() } disabled={disabled || dataForm.status === 'detenido'}>
                                                 Detener
                                             </Button>
                                         </Col>
@@ -550,7 +582,7 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block onClick={() => encenderNodo()} disabled={disabled} className="bg-yellow">
+                                            <Button block onClick={() => encenderNodo()} disabled={disabled || dataForm.status === 'manual'} className="bg-yellow">
                                                 Encender
                                             </Button>
                                         </Col>
@@ -558,7 +590,7 @@ const Node = ({ match, history }) => {
                                     <Row>
                                         <Col xs={12}>
                                             <br/>
-                                            <Button block color={'danger'} onChange={() => apagarNodo()} disabled={disabled || dataForm.status === 'detenido'}>
+                                            <Button block color={'danger'} onChange={() => apagarNodo()} disabled={disabled || dataForm.status === 'desconectado'}>
                                                 Detener
                                             </Button>
                                         </Col>
