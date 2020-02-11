@@ -1,6 +1,7 @@
 import {Client} from 'ssh2'
 import fs from 'fs'
 import models from 'models'
+import moment from 'moment'
 
 export function connectToRasberry(){
     return new Promise(async (resolve, reject) => {
@@ -316,8 +317,23 @@ export function saveNode(data, schedule){
                 return
             }
 
+            console.log(schedule)
+
             // "1:00:00:00 1:00:15:00 1:01:00:00 1:01:15:00 1:02:30:00 1:02:45:00 4:03:15:00 4:03:30:00 6:04:30:00 6:04:45:00"
-            const scheduleArgs = schedule.map((s) => { return `${s.daysOfWeek[0]}:${s.startTime} ${s.daysOfWeek[0]}:${s.endTime}` }).join(' ')
+            const scheduleArgs = schedule
+                .map((row) => ({ ...row, daysOfWeek : [row.daysOfWeek[0] === 0 ? 7 : row.daysOfWeek[0] ] })) // mandar 0 a 7 (domingo es el dia 7)
+                .sort((a, b) => {
+                    if(a.daysOfWeek[0] < b.daysOfWeek[0]) return -1
+                    if(a.daysOfWeek[0] > b.daysOfWeek[0]) return 1
+
+                    let aTime = moment(a.startTime, 'HH:mm:ss');
+                    let bTime = moment(b.startTime, 'HH:mm:ss');
+                    if(aTime.isBefore(bTime)) return -1
+                    if(aTime.isAfter(bTime)) return 1
+
+                    return 0
+                })
+                .map((s) => { return `${s.daysOfWeek[0]}:${moment(s.startTime, 'HH:mm:ss').format('HH:mm')} ${s.daysOfWeek[0]}:${moment(s.endTime, 'HH:mm:ss').format('HH:mm')}` }).join(' ')
             const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${role} ${node.num} ${scheduleArgs}`
             console.log(shell)
             // respuesta esperada para devolver positivo
