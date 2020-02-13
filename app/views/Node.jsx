@@ -482,6 +482,57 @@ const Node = ({ match, history }) => {
                     </Col>
                     <Col xs={6}>
                         <FormGroup row>
+                            <Label sm={3}>Rol</Label>
+                            <Col sm={9} lg={6}>
+                                <Input
+                                    type="number"
+                                    name="role"
+                                    onChange={onChange}
+                                    value={dataForm.role}
+                                    disabled={readOnly}
+                                />
+                            </Col>
+                        </FormGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col xs={6}>
+                        <FormGroup row>
+                            <Label sm={3}>Latitud</Label>
+                            <Col sm={9} lg={6}>
+                                <Input
+                                    type="text"
+                                    name="latitud"
+                                    onChange={onChange}
+                                    value={dataForm.latitud}
+                                    disabled={readOnly}
+                                />
+                            </Col>
+                        </FormGroup>
+                    </Col>
+                    <Col xs={6}>
+                        <FormGroup row>
+                            <Label sm={3}>Longitud</Label>
+                            <Col sm={9} lg={6}>
+                                <Input
+                                    type="text"
+                                    name="longitud"
+                                    onChange={onChange}
+                                    value={dataForm.longitud}
+                                    disabled={readOnly}
+                                />
+                            </Col>
+                        </FormGroup>
+                    </Col>
+                </Row>
+
+
+                
+                
+                <Row>
+                    <Col xs={6}>
+                        <FormGroup row>
                             <Label sm={3}>Estado</Label>
                             <Col sm={9} lg={6}>
                                 <label className={(statuses.find(row => dataForm.status === row.status) ||  {}).font}>
@@ -491,6 +542,8 @@ const Node = ({ match, history }) => {
                         </FormGroup>
                     </Col>
                 </Row>
+
+                
             </Form>
 
             <Row>
