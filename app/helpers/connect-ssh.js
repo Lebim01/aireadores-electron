@@ -371,7 +371,7 @@ export function saveNode(data, schedule){
                     return 0
                 })
                 .map((s) => { return `${s.daysOfWeek[0]}:${moment(s.startTime, 'HH:mm:ss').format('HH:mm')} ${s.daysOfWeek[0]}:${moment(s.endTime, 'HH:mm:ss').format('HH:mm')}` }).join(' ')
-            const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${role} ${node.num} ${scheduleArgs}`
+            const shell = `./aireadores-server/aircontrol.py set_schedule ${node.address} ${node.channel} ${node.device_id} ${node.role} ${node.num} ${scheduleArgs}`
             console.log(shell)
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
