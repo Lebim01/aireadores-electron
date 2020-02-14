@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { turnOnNode, pingNode, enableProgramNode, saveNode, disableNode } from 'helpers/connect-ssh'
+import { turnOnNode, pingNode, enableProgramNode, saveNode, disableNode, turnOffNode } from 'helpers/connect-ssh'
 import moment from 'moment';
 import 'moment/locale/es'
 import Swal from 'sweetalert2';
@@ -195,7 +195,7 @@ const Node = ({ match, history }) => {
     ]
 
     const statuses = [
-        { status : 'desconectado', font : '', method : turnOnNode },
+        { status : 'desconectado', font : '', method : turnOffNode },
         { status : 'horario', font : 'text-success', method : enableProgramNode },
         { status : 'detenido', font : 'text-danger', method : disableNode },
         { status : 'manual', font : 'text-yellow' },
@@ -583,7 +583,7 @@ const Node = ({ match, history }) => {
 
                         selectable
                         selectAllow={(selectInfo) => {
-                            return moment(selectInfo.start).date() === moment(selectInfo.end).date()
+                            return moment(selectInfo.start).date() === moment(selectInfo.end).date() || moment(selectInfo.start).add(1, 'day').hours() === 0
                         }}
                         select={(data) => {
                             if(!readOnly)
