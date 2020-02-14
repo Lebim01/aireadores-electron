@@ -64,7 +64,7 @@ export function connectToNode(node_id){
                     address,
                     channel,
                     device_id,
-                    role: 0,  // TODO get it from frontend
+                    role,  // TODO get it from frontend
                     num,
                 }
             })
