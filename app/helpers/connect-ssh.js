@@ -302,6 +302,43 @@ export function pingNode(node_id){
     })
 }
 
+export function statusNode(node_id){
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { conn, node } = await connectToNode(node_id)
+
+            // comando que se ejecuta
+            const shell = `./aireadores-server/aircontrol.py status ${node.address} ${node.channel} ${node.device_id} ${node.role}`
+            // respuesta esperada para devolver positivo
+            const compare = `comando shell`
+
+            conn.exec(shell, function(err, stream){
+                if (err)
+                    reject(err);
+
+                stream
+                .on('data', function(data) {
+                    console.log('STDOUT::', data.toString())
+                    if(data.toString().localeCompare(compare)){
+                        resolve(data.toString())
+                    }else{
+                        reject('Respuesta no esperada')
+                    }
+
+                    stream.end()
+                    conn.end()
+                }).stderr.on('data', function(data) {
+                    reject(data.toString())
+                    stream.end()
+                    conn.end()
+                });
+            })
+        }catch(err){
+            reject(err)
+        }
+    })
+}
+
 export function saveNode(data, schedule){
     return new Promise(async (resolve, reject) => {
         try {

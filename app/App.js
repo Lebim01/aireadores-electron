@@ -9,7 +9,9 @@ import "assets/scss/argon-dashboard-react.global.scss";
 import AdminLayout from "layouts/Admin.jsx";
 import AuthLayout from "layouts/Auth.jsx";
 import { hot } from "react-hot-loader/root";
+import monitor from 'helpers/monitor-nodes-status'
 
+monitor()
 const theme = createMuiTheme();
 
 const App = () => {
