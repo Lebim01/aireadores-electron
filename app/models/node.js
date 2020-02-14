@@ -25,6 +25,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
 			comment: "positive small integer"
         },
+        latitude :{
+            type: Sequelize.INTEGER,
+            comment: "latitud"
+        },
+        longitude :{
+            type: Sequelize.INTEGER,
+            comment: "longitud"
+        },
         num : {
             type: Sequelize.INTEGER,
             validate : {

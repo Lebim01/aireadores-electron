@@ -502,10 +502,10 @@ const Node = ({ match, history }) => {
                             <Label sm={3}>Latitud</Label>
                             <Col sm={9} lg={6}>
                                 <Input
-                                    type="text"
-                                    name="latitud"
+                                    type="number"
+                                    name="latitude"
                                     onChange={onChange}
-                                    value={dataForm.latitud}
+                                    value={dataForm.latitude}
                                     disabled={readOnly}
                                 />
                             </Col>
@@ -513,23 +513,19 @@ const Node = ({ match, history }) => {
                     </Col>
                     <Col xs={6}>
                         <FormGroup row>
-                            <Label sm={3}>Longitud</Label>
+                            <Label sm={3}>Longitude</Label>
                             <Col sm={9} lg={6}>
                                 <Input
-                                    type="text"
-                                    name="longitud"
+                                    type="number"
+                                    name="longitude"
                                     onChange={onChange}
-                                    value={dataForm.longitud}
+                                    value={dataForm.longitude}
                                     disabled={readOnly}
                                 />
                             </Col>
                         </FormGroup>
                     </Col>
                 </Row>
-
-
-                
-                
                 <Row>
                     <Col xs={6}>
                         <FormGroup row>
