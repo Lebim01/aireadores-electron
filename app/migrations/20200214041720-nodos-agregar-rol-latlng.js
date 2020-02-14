@@ -1,18 +1,9 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-
-      await queryInterface.addColumn(
-        'node',
-        'role',
-        {
-          type: Sequelize.DataTypes.STRING,
-        },
-        { transaction }
-      );
 
       await queryInterface.addColumn(
         'node',
@@ -40,14 +31,9 @@ module.exports = {
     }
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: async (queryInterface, Sequelize) => {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.removeColumn(
-        'node',
-        'role',
-        { transaction }
-      );
 
       await queryInterface.removeColumn(
         'node',
