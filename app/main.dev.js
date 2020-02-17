@@ -28,15 +28,17 @@ let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
+  const shell = require('shelljs');
   sourceMapSupport.install();
+  shell.exec('node init-database.js')
 }
 
-/*if (
+if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
-) {*/
+) {
   require('electron-debug')();
-//}
+}
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');

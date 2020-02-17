@@ -58,6 +58,11 @@
   "build": {
     "productName": "Aireadores",
     "appId": "org.develar.Aireadores",
+
+    "extraResources" : [
+      "app/models/"
+    ],
+
     "files": [
       "dist/",
       "node_modules/",
