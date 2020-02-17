@@ -14,7 +14,21 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 const db = {};
 
-const dirModels = path.join(__dirname, 'models')
+let dirModels = '' 
+
+if(require('remote').require){
+	const remote = require('remote'), app = remote.require('app');
+
+	const basepath = app.getAppPath();
+	
+	dirModels = path.join(basepath, 'app', 'models')
+}else{
+	const app = require('app');
+
+	const basepath = app.getAppPath();
+	
+	dirModels = path.join(basepath, 'app', 'models')
+}
 
 fs
 	.readdirSync(dirModels)

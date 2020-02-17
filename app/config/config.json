@@ -15,5 +15,14 @@
     "dialect": "sqlite",
     "storage": "./database.sqlite",
     "logging": false
+  },
+  "production": {
+    "username": "root",
+    "password": "",
+    "database": "react_sequelize_production",
+    "host": "",
+    "dialect": "sqlite",
+    "storage": "./database_prod.sqlite",
+    "logging": false
   }
 }
