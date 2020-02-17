@@ -63,12 +63,16 @@ const Node = ({ match, history }) => {
         })
         .then(result => {
             if(result.value){
+                let endtime_str = moment(data.end).format('HH:mm:ss')
+                if(endtime_str === '00:00:00')
+                    endtime_str = '23:59:59'
+
                 setTimers([
                     ...timers,
                     {
                         daysOfWeek : [ moment(data.start).day() ],
                         startTime : moment(data.start).format('HH:mm:ss'),
-                        endTime : moment(data.end).format('HH:mm:ss')
+                        endTime : endtime_str
                     }
                 ])
                 setDisabled(true)
