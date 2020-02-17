@@ -580,7 +580,13 @@ const Node = ({ match, history }) => {
 
                         selectable
                         selectAllow={(selectInfo) => {
-                            return moment(selectInfo.start).date() === moment(selectInfo.end).date() || moment(selectInfo.start).add(1, 'day').hours() === 0
+
+                            let startday = selectInfo.startStr.substring(8,10)
+                            let endday = selectInfo.endStr.substring(8,10)
+
+                            if(startday === endday || ( selectInfo.endStr.substring(11,16) === "00:00")  &&  parseInt(endday, 10) === parseInt(startday, 10) + 1 )
+                                return true
+
                         }}
                         select={(data) => {
                             if(!readOnly)
