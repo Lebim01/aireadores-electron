@@ -513,7 +513,7 @@ const Node = ({ match, history }) => {
                     </Col>
                     <Col xs={6}>
                         <FormGroup row>
-                            <Label sm={3}>Longitude</Label>
+                            <Label sm={3}>Longitud</Label>
                             <Col sm={9} lg={6}>
                                 <Input
                                     type="number"
@@ -525,6 +525,7 @@ const Node = ({ match, history }) => {
                             </Col>
                         </FormGroup>
                     </Col>
+
                 </Row>
                 <Row>
                     <Col xs={6}>
