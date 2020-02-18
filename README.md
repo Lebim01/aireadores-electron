@@ -15,3 +15,13 @@ npm run postinstall
 
 npm run dev
 ```
+
+Instalador
+
+````
+npm run package
+
+# Windows
+
+# correr ejecutable en la carpeta release/win-unpacked/Aireadores.exe
+```
