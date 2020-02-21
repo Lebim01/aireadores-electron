@@ -15,6 +15,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import EventEmitter from 'events'
+import path from 'path'
 
 export default class AppUpdater {
   constructor() {
@@ -62,10 +63,13 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    icon : path.join(__dirname, '..', 'resources', 'logo_santapriscila.ico'),
     webPreferences: {
       nodeIntegration: true
     }
   });
+
+  console.log(path.join(__dirname, 'resources', 'logo_santapriscila.ico'))
 
   global['sequelize-emitter'] = new EventEmitter()
 
