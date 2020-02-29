@@ -266,7 +266,7 @@ const Node = ({ match, history }) => {
                 else if(!aireadores){
                     Swal.fire('', 'La cantidad de aireadores es requerida', 'error')
                 }
-                else if(aireadores > dataForm.num){
+                else if( parseInt(aireadores, 10) > parseInt(dataForm.num, 10) ){
                     Swal.fire('', 'La cantidad maxima de aireadores es ' + dataForm.num, 'error')
                 }
                 else {
