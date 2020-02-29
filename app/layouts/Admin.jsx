@@ -8,7 +8,7 @@ import Sidebar from "components/Sidebar/Sidebar.jsx";
 
 import routes from "routes.js";
 
-import argonLogo from 'assets/img/brand/argon-react.png'
+import argonLogo from 'assets/img/brand/logo_santapriscila.png'
 
 class Admin extends React.Component {
   componentDidUpdate(e) {
