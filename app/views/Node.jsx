@@ -584,13 +584,16 @@ const Node = ({ match, history }) => {
 
                         selectable
                         selectAllow={(selectInfo) => {
+                            let start_date = selectInfo.startStr.substring(0,10)
+                            let end_date = selectInfo.endStr.substring(0,10)
+                            if(start_date === end_date) return true
 
-                            let startday = selectInfo.startStr.substring(8,10)
-                            let endday = selectInfo.endStr.substring(8,10)
-
-                            if(startday === endday || ( selectInfo.endStr.substring(11,16) === "00:00")  &&  parseInt(endday, 10) === parseInt(startday, 10) + 1 )
-                                return true
-
+                            let end_day_hour_minute = selectInfo.endStr.substring(11,16)
+                            if(end_day_hour_minute === "00:00"){
+                                let start_date_obj = moment(start_date + ' 01:00:00', 'YYYY-M-DD HH:mm:ss')
+                                let end_date_obj = moment(end_date + ' 01:00:00', 'YYYY-M-DD HH:mm:ss')
+                                if(end_date_obj.diff(start_date_obj, 'days') === 1) return true
+                            }
                         }}
                         select={(data) => {
                             if(!readOnly)
