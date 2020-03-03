@@ -11,7 +11,9 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 const db = {};
 
-const dirModels =  env === 'production' ? path.join(process.cwd(), 'resources', 'app', 'models') : path.join(process.cwd(), 'app', 'models')
+const dirModels =  env === 'production' 
+	? path.join(process.cwd(), 'resources', 'app', 'models') 
+	: path.join(process.cwd(), 'app', 'models')
 
 fs
 	.readdirSync(dirModels)

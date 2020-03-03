@@ -4,6 +4,7 @@ import Node from "views/Node.jsx";
 import Pools from "views/Pools.jsx";
 import Pool from "views/Pool.jsx";
 import HistoryNodes from "views/HistoryNodes"
+import MapNodes from "views/MapNodes"
 
 var routes = [
   {
@@ -27,6 +28,13 @@ var routes = [
     name: "Historial de nodos",
     icon: "fa fa-node",
     component: HistoryNodes,
+    layout: "/admin"
+  },
+  {
+    path: "/mapa-nodos",
+    name: "Mapa de nodos",
+    icon: "fa fa-node",
+    component: MapNodes,
     layout: "/admin"
   },
   {
