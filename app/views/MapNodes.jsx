@@ -47,7 +47,7 @@ const MapNodes = (props) => {
         return bbox.getCenter()
     }
 
-    const {lat,lng} = setBounds(data)
+    const center = setBounds(data)
 
     return (
         <>
@@ -61,7 +61,7 @@ const MapNodes = (props) => {
                             <CardBody>
                                 <Map 
                                     ref={map} 
-                                    center={data.length > 0 ? [lat,lng] : [51.505, -0.09]}
+                                    center={data.length > 0 ? [center.lat, center.lng] : [51.505, -0.09]}
                                     zoom={13}
                                     
                                 >
