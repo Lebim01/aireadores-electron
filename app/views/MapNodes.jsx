@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap'
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import L from 'leaflet'
 import models from 'models'
 import './MapNodes.css'
 
@@ -29,21 +30,24 @@ const MapNodes = (props) => {
         getMap()
     }, [])
 
-    const setBounds = () => {
-        if(data.length === 0) return null
+    const setBounds = (coords) => {
+        if(coords.length === 0) return null
         
         let lats = [], lngs = []
-        for (var i = 0; i < data.length; i++)  {
-            lats.push(data[i].latitude);
-            lngs.push(data[i].longitude);
+        for (var i = 0; i < coords.length; i++)  {
+            lats.push(coords[i].latitude);
+            lngs.push(coords[i].longitude);
         }
-        console.log(lats, lngs)
         const minlat = Math.min.apply(null, lats), maxlat = Math.max.apply(null, lats);
         const minlng = Math.min.apply(null, lngs), maxlng = Math.max.apply(null, lngs);
-        const bbox = [[minlat,minlng],[maxlat,maxlng]];
-        console.log(bbox)
-        return bbox
+        const bbox = L.latLngBounds(
+            L.latLng(minlat, minlng),
+            L.latLng(maxlat, maxlng)
+        )
+        return bbox.getCenter()
     }
+
+    const {lat,lng} = setBounds(data)
 
     return (
         <>
@@ -57,10 +61,9 @@ const MapNodes = (props) => {
                             <CardBody>
                                 <Map 
                                     ref={map} 
-                                    center={[51.505, -0.09]}
+                                    center={data.length > 0 ? [lat,lng] : [51.505, -0.09]}
                                     zoom={13}
-                                    bounds={setBounds()}
-                                    boundsOptions={{padding: [50, 50]}}
+                                    
                                 >
                                     <TileLayer
                                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
