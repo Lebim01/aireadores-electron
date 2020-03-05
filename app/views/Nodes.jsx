@@ -27,7 +27,7 @@ const Ssh = ({ history, location }) => {
                             <CardBody>
                                 <Row>
                                     <Col xs="4">
-                                        Psicina
+                                        Piscina
                                         <SelectAsync query={{ model : 'pool', valueName : 'id', labelName : 'name' }} onChange={(e) => setPoolId(e.target.value)} value={poolId}>
                                             <option value="">Todas</option>
                                         </SelectAsync>
