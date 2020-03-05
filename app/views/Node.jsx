@@ -117,7 +117,6 @@ const Node = ({ match, history }) => {
     /** SAVE/GET */
 
     const preSave = async (data) => {
-        return true
         try {
             const output = await saveNode(data, timers)
             let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
