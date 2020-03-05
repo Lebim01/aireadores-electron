@@ -34,9 +34,11 @@ const MapNodes = (props) => {
         if(coords.length === 0) return null
         
         let lats = [], lngs = []
-        for (var i = 0; i < coords.length; i++)  {
-            lats.push(coords[i].latitude);
-            lngs.push(coords[i].longitude);
+        for (var i = 0; i < coords.length; i++){
+            if(coords[i].latitude && coords[i].longitude){
+                lats.push(coords[i].latitude);
+                lngs.push(coords[i].longitude);
+            }
         }
         const minlat = Math.min.apply(null, lats), maxlat = Math.max.apply(null, lats);
         const minlng = Math.min.apply(null, lngs), maxlng = Math.max.apply(null, lngs);

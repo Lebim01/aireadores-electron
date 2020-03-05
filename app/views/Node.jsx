@@ -15,6 +15,13 @@ import interactionPlugin from '@fullcalendar/interaction';
 const globalTimeout = require('electron').remote.getGlobal('setTimeout')
 const emitter = require('electron').remote.getGlobal('sequelize-emitter')
 
+const day7To0 = (day) => {
+    return day === 7 ? 0 : day
+}
+const day0To7 = (day) => {
+    return day === 0 ? 7 : day
+}
+
 const useTime = () => {
     const [time, setTime] = useState(moment())
 
@@ -90,13 +97,17 @@ const Node = ({ match, history }) => {
         .then(result => {
             if(result.value){
                 let _timers = [ ...timers ]
-                setTimersDeleted(_timers.splice(
-                    _timers.findIndex(row => 
-                        row.startTime === moment(_instance.start).format('HH:mm:ss')
-                        && row.endTime === moment(_instance.end).format('HH:mm:ss')
-                    ),
-                    1
-                ))
+                setTimersDeleted([
+                    ...timersDeleted,
+                    _timers.splice(
+                        _timers.findIndex(row =>
+                            row.startTime === moment(_instance.start).format('HH:mm:ss')
+                            && row.endTime === moment(_instance.end).format('HH:mm:ss')
+                            && day0To7(row.daysOfWeek[0]) === moment(_instance.start).isoWeekday()
+                        ),
+                        1
+                    )
+                ])
                 setTimers(_timers)
                 setDisabled(true)
             }
@@ -106,6 +117,7 @@ const Node = ({ match, history }) => {
     /** SAVE/GET */
 
     const preSave = async (data) => {
+        return true
         try {
             const output = await saveNode(data, timers)
             let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
@@ -124,9 +136,9 @@ const Node = ({ match, history }) => {
     const timerFullcalendarToModel = (timer) => {
         return {
             id : timer.id,
-            start_day : timer.daysOfWeek[0],
+            start_day : day0To7(timer.daysOfWeek[0]),
             start_time : timer.startTime,
-            end_day : timer.daysOfWeek[0],
+            end_day : day0To7(timer.daysOfWeek[0]),
             end_time : timer.endTime
         }
     }
@@ -134,7 +146,7 @@ const Node = ({ match, history }) => {
     const timerModelToFullcalendar = (timer) => {
         return {
             id : timer.id,
-            daysOfWeek : [ timer.start_day ],
+            daysOfWeek : [ day7To0(timer.start_day) ],
             startTime : timer.start_time,
             endTime : timer.end_time
         }
