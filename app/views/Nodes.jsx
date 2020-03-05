@@ -44,10 +44,10 @@ const Ssh = ({ history, location }) => {
                                         }
                                     }}
                                     header={[
-                                        ['Piscina', 'Nodo', 'Aireadores', 'Estado']
+                                        ['Piscina', 'Dirección', 'Canal', 'Aireadores', 'Estado']
                                     ]}
                                     body={[
-                                        'pool.name', 'address', 'num', 'status'
+                                        'pool.name', 'address', 'channel', 'num', 'status'
                                     ]}
                                     history={history}
                                     location={location}
