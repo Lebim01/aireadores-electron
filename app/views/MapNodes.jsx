@@ -18,11 +18,18 @@ const MapNodes = (props) => {
 
     useEffect(() => {
         const getMap = async () => {
-            const result = await models.node.findAll()
-            const _data = result.map(record => ({
+            const result = await models.node.findAll({
+                include: [
+                    { model: models.pool }
+                ],
+            })
+            const _data = result.filter(record => record.latitude && record.longitude).map(record => ({
                 latitude : record.latitude,
                 longitude : record.longitude,
-                device_id : record.device_id
+                device_id : record.device_id,
+                channel: record.channel,
+                address: record.address,
+                pool_name: record.pool ? record.pool.name : 'N/A',
             }))
 
             setData(_data)
@@ -78,7 +85,7 @@ const MapNodes = (props) => {
                                     />
                                     {data.map((row, i) => 
                                         <Marker position={[ row.latitude, row.longitude ]} key={i}>
-                                            <Popup>#{row.device_id}</Popup>
+                                            <Popup>Dirección: {row.address} Canal: {row.channel} Identificador: {row.device_id} Piscina: {row.pool_name} </Popup>
                                         </Marker>
                                     )}
                                 </Map>
