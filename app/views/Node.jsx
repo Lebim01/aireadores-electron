@@ -284,18 +284,18 @@ const Node = ({ match, history }) => {
                 else {
                     modalLoading('Encender nodo manualmente', '', () => {
                         return turnOnNode(dataForm.id, minutos, aireadores)
-                        .then((output) => {
-                            if(showDisplayOutput(output)){
-                                devolverEstadoAnterior(minutos, dataForm.status)
-                                saveStatus('manual')
-                            }else{
+                            .then((output) => {
+                                if(showDisplayOutput(output)){
+                                    devolverEstadoAnterior(minutos, dataForm.status)
+                                    saveStatus('manual')
+                                }else{
+                                    saveStatus('desconectado')
+                                }
+                            })
+                            .catch(error => {
+                                Swal.showValidationMessage(error)
                                 saveStatus('desconectado')
-                            }
-                        })
-                        .catch(error => {
-                            Swal.showValidationMessage(error)
-                            saveStatus('desconectado')
-                        })
+                            })
                     })
                 }
             }
@@ -601,6 +601,8 @@ const Node = ({ match, history }) => {
                             if(start_date === end_date) return true
 
                             let end_day_hour_minute = selectInfo.endStr.substring(11,16)
+                            return end_day_hour_minute === '00:00'
+
                             if(end_day_hour_minute === "00:00"){
                                 let start_date_obj = moment(start_date + ' 01:00:00', 'YYYY-M-DD HH:mm:ss')
                                 let end_date_obj = moment(end_date + ' 01:00:00', 'YYYY-M-DD HH:mm:ss')

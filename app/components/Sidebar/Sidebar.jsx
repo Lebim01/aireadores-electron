@@ -132,6 +132,9 @@ class Sidebar extends React.Component {
               <img
                 alt={logo.imgAlt}
                 className="navbar-brand-img"
+                style={{
+                  maxHeight : '4rem'
+                }}
                 src={logo.imgSrc}
               />
             </NavbarBrand>
