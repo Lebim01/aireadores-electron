@@ -46,7 +46,13 @@ const MapNodes = (props) => {
             L.latLng(minlat, minlng),
             L.latLng(maxlat, maxlng)
         )
-        return bbox.getCenter()
+        
+        const zoom = map.current.leafletElement.getBoundsZoom(bbox)
+        
+        return {
+            center : bbox.getCenter(),
+            zoom : isFinite(zoom) ? zoom : 8
+        }
     }
 
     const center = setBounds(data)
@@ -63,9 +69,8 @@ const MapNodes = (props) => {
                             <CardBody>
                                 <Map 
                                     ref={map} 
-                                    center={data.length > 0 ? [center.lat, center.lng] : [51.505, -0.09]}
-                                    zoom={13}
-                                    
+                                    center={data.length > 0 && center ? center.center : [51.505, -0.09]}
+                                    zoom={data.length > 0 && center ? center.zoom : 13}
                                 >
                                     <TileLayer
                                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
