@@ -39,7 +39,7 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
         }
     }
 
-    const save = async () => {
+    const save = async (complete = true) => {
         const { id, ...fieldsToCreate } = dataForm
 
         let instance
@@ -54,14 +54,14 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
             await instance.save()
         }
 
-        if(props.onSave)
+        if(props.onSave && complete)
             await props.onSave(instance)
     }
 
     const completeSave = async (showModal = true) => {
         try {
             await preSave()
-            await save()
+            await save(true)
 
             if(showModal)
                 Swal.fire('Guardar', 'Guardado correctamente', 'success')

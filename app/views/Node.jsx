@@ -37,9 +37,19 @@ const useTime = () => {
     return time
 }
 
+function useAsyncState(initialValue) {
+    const [value, setValue] = useState(initialValue);
+    const setter = x =>
+        new Promise(resolve => {
+            setValue(x);
+            resolve(x);
+        });
+    return [value, setter];
+}
+
 const Node = ({ match, history }) => {
     const editPage = useRef(null)
-    const [dataForm, setDataForm] = useState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'desconectado' })
+    const [dataForm, setDataForm] = useAsyncState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'desconectado' })
     const [disabled, setDisabled] = useState(false) // Disable actions buttons
     const [timers, setTimers] = useState([]) // Visual timers data
     const [timersDeleted, setTimersDeleted] = useState([]) // Visual timers deleted
@@ -198,8 +208,8 @@ const Node = ({ match, history }) => {
 
     /** SSH METHODS */
 
-    const saveStatus = (status) => {
-        setDataForm({ ...dataForm, status })
+    const saveStatus = async (status) => {
+        await setDataForm({ ...dataForm, status })
         editPage.current.save(false)
     }
 
