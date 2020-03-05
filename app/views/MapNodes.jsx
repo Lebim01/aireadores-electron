@@ -51,7 +51,7 @@ const MapNodes = (props) => {
         
         return {
             center : bbox.getCenter(),
-            zoom : isFinite(zoom) ? zoom : 8
+            zoom : isFinite(zoom) ? zoom : 18
         }
     }
 
