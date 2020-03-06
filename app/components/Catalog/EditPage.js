@@ -7,6 +7,10 @@ import Swal from 'sweetalert2'
 
 const EditPage = React.forwardRef(({ children, match, history, route, model, title, dataForm, setDataForm, ...props }, ref) => {
     useEffect(() => {
+        load()
+    }, [])
+
+    const load = () => {
         async function getDataForm(id){
             const { dataValues } = await models[model].findByPk(id)
             const { updatedAt, createdAt, ...data } = dataValues
@@ -16,7 +20,7 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
         if(match.params.id && Number(match.params.id) > 0){
             getDataForm(Number(match.params.id))
         }
-    }, [])
+    }
 
     const goBack = () => {
         history.push(route)
@@ -103,7 +107,8 @@ const EditPage = React.forwardRef(({ children, match, history, route, model, tit
             preSave,
             completeSave,
             remove,
-            goBack
+            goBack,
+            load
         }
     }
 

@@ -60,6 +60,11 @@ const Node = ({ match, history }) => {
     const [classBtn, setClassBtn] = useState({})
 
     useEffect(() => {
+        emitter.on(`node-refresh`, () => {
+            if(editPage && editPage.current && editPage.current.load)
+                editPage.current.load()
+        })
+
         getTimers()
     }, [])
 
@@ -356,7 +361,6 @@ const Node = ({ match, history }) => {
                             }else{
                                 saveStatus('desconectado', output, true)
                             }
-                            saveStatus(newStatus, output)
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
@@ -383,7 +387,6 @@ const Node = ({ match, history }) => {
                             }else{
                                 saveStatus('desconectado', output, true)
                             }
-                            saveStatus(newStatus, output)
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
