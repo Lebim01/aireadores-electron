@@ -47,7 +47,7 @@ const HistoryEvents = (props) => {
         include : [
             { 
                 model : models.node, 
-                attributes : ['device_id', 'pool_id'], 
+                attributes : ['device_id', 'pool_id', 'address', 'channel'], 
                 include : [
                     { 
                         model : models.pool, 
@@ -109,8 +109,9 @@ const HistoryEvents = (props) => {
                                 <Table>
                                     <thead>
                                         <tr>
-                                            <th>Psicina</th>
-                                            <th>Nodo</th>
+                                            <th>Piscina</th>
+                                            <th>Dirección</th>
+                                            <th>Canal</th>
                                             <th>Fecha</th>
                                             <th>Acción</th>
                                             <th>Estado</th>
@@ -121,7 +122,8 @@ const HistoryEvents = (props) => {
                                         {(data || []).map((row, i) => 
                                             <tr key={i}>
                                                 <td>{row['node.pool.name']}</td>
-                                                <td>{row['node.device_id']}</td>
+                                                <td>{row['node.address']}</td>
+                                                <td>{row['node.channel']}</td>
                                                 <td>{moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss')}</td>
                                                 <td>{row.action}</td>
                                                 <td>{row.status}</td>
