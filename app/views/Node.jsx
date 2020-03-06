@@ -107,6 +107,7 @@ const Node = ({ match, history }) => {
         .then(result => {
             if(result.value){
                 let _timers = [ ...timers ]
+
                 setTimersDeleted([
                     ...timersDeleted,
                     _timers.splice(
@@ -116,7 +117,7 @@ const Node = ({ match, history }) => {
                             && day0To7(row.daysOfWeek[0]) === moment(_instance.start).isoWeekday()
                         ),
                         1
-                    )
+                    )[0]
                 ])
                 setTimers(_timers)
                 setDisabled(true)
@@ -169,7 +170,7 @@ const Node = ({ match, history }) => {
     }
 
     const saveTimers = async (record) => {
-        setDataForm({ ...record.dataValues })
+        await setDataForm({ ...record.dataValues })
         try {
             for(let i in timers){
                 let timer = timerFullcalendarToModel(timers[i])
@@ -189,6 +190,8 @@ const Node = ({ match, history }) => {
 
                 timers[i].id = instance.dataValues.id
             }
+
+            console.log(timersDeleted)
             
             for(let i in timersDeleted){
                 let timer = timerFullcalendarToModel(timersDeleted[i])
