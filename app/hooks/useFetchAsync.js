@@ -36,6 +36,7 @@ export default function useFetchAsync({ model, ...query }) {
     return {
         error,
         loading,
-        data
+        data,
+        refresh
     }
 }
