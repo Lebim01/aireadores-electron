@@ -3,6 +3,19 @@ import fs from 'fs'
 import models from 'models'
 import moment from 'moment'
 
+export async function createEvent(node, { action, response, status }){
+    const fieldsToCreate = {
+        node_id : node.id,
+        node_repr : JSON.stringify(node),
+        response,
+        action,
+        status
+    }
+    const instance = models.event.build(fieldsToCreate)
+    console.log('event created', instance)
+    return await instance.save()
+}
+
 export function connectToRasberry(){
     return new Promise(async (resolve, reject) => {
         try {

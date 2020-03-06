@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, CardHeader, CardBody, Input, Form, FormGroup, Label, Button } from 'reactstrap'
-import { turnOnNode, pingNode, enableProgramNode, saveNode, disableNode, turnOffNode } from 'helpers/connect-ssh'
+import { turnOnNode, pingNode, enableProgramNode, saveNode, disableNode, turnOffNode, createEvent } from 'helpers/connect-ssh'
 import moment from 'moment';
 import 'moment/locale/es'
 import Swal from 'sweetalert2';
@@ -131,10 +131,16 @@ const Node = ({ match, history }) => {
         try {
             const output = await saveNode(data, timers)
             let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
-            return {
+            const response = {
                 message : displayOutput.display,
                 status : displayOutput.fire === 'success'
             }
+
+            if(response.status){
+                await createEvent(data, { status: data.status, action: 'SET SCHEDULE', response: output })
+            }
+
+            return response
         }catch(err){
             return {
                 status : false,
@@ -190,8 +196,6 @@ const Node = ({ match, history }) => {
 
                 timers[i].id = instance.dataValues.id
             }
-
-            console.log(timersDeleted)
             
             for(let i in timersDeleted){
                 let timer = timerFullcalendarToModel(timersDeleted[i])
@@ -211,9 +215,31 @@ const Node = ({ match, history }) => {
 
     /** SSH METHODS */
 
-    const saveStatus = async (status) => {
+    const saveStatus = async (status, output, wrong = false) => {
         await setDataForm({ ...dataForm, status })
         editPage.current.save(false)
+
+        /**
+         * CREATE EVENT 
+         */
+        let action = 'WRONG_STATUS'
+        if(!wrong){
+            switch(status){
+                case 'desconectado': 
+                    action = 'STOP SCHEDULE'
+                    break;
+                case 'horario': 
+                    action = 'RUN SCHEDULE'
+                    break;
+                case 'detenido': 
+                    action = 'STOP TIMER'
+                    break;
+                case 'manual': 
+                    action = 'RUN TIMER'
+                    break;
+            }
+        }
+        await createEvent(dataForm, { status, action, response: output })
     }
 
     const outputs = [
@@ -253,13 +279,13 @@ const Node = ({ match, history }) => {
             .then((output) => {
                 Swal.hideLoading()
                 if(!showDisplayOutput(output)){
-                    saveStatus('desconectado')
+                    saveStatus('desconectado', output)
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 Swal.hideLoading()
                 Swal.showValidationMessage(error)
-                saveStatus('desconectado')
+                saveStatus('desconectado', error, true)
             })
         })
     }
@@ -299,14 +325,14 @@ const Node = ({ match, history }) => {
                             .then((output) => {
                                 if(showDisplayOutput(output)){
                                     devolverEstadoAnterior(minutos, dataForm.status)
-                                    saveStatus('manual')
+                                    saveStatus('manual', output)
                                 }else{
-                                    saveStatus('desconectado')
+                                    saveStatus('desconectado', output, true)
                                 }
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 Swal.showValidationMessage(error)
-                                saveStatus('desconectado')
+                                saveStatus('desconectado', error, true)
                             })
                     })
                 }
@@ -326,14 +352,15 @@ const Node = ({ match, history }) => {
                     return cambiarEstado('desconectado')
                         .then((output) => {
                             if(showDisplayOutput(output)){
-                                saveStatus('desconectado')
+                                saveStatus('desconectado', output)
                             }else{
-                                saveStatus('desconectado')
+                                saveStatus('desconectado', output, true)
                             }
+                            saveStatus(newStatus, output)
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
-                            saveStatus('desconectado')
+                            saveStatus('desconectado', error, true)
                         })
                 })
             }
@@ -352,14 +379,15 @@ const Node = ({ match, history }) => {
                     return cambiarEstado('horario')
                         .then((output) => {
                             if(showDisplayOutput(output)){
-                                saveStatus('horario')
+                                saveStatus('horario', output)
                             }else{
-                                saveStatus('desconectado')
+                                saveStatus('desconectado', output, true)
                             }
+                            saveStatus(newStatus, output)
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
-                            saveStatus('desconectado')
+                            saveStatus('desconectado', error, true)
                         })
                 })
             }
@@ -378,14 +406,14 @@ const Node = ({ match, history }) => {
                     return cambiarEstado('detenido')
                         .then((output) => {
                             if(showDisplayOutput(output)){
-                                saveStatus('detenido')
+                                saveStatus('detenido', output)
                             }else{
-                                saveStatus('desconectado')
+                                saveStatus('desconectado', output, true)
                             }
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
-                            saveStatus('desconectado')
+                            saveStatus('desconectado', error, true)
                         })
                 })
             }
