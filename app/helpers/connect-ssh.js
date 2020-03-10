@@ -321,7 +321,7 @@ export function statusNode(node_id){
             const { conn, node } = await connectToNode(node_id)
 
             // comando que se ejecuta
-            const shell = `./aireadores-server/aircontrol.py status ${node.address} ${node.channel} ${node.device_id} ${node.role}`
+            const shell = `./aireadores-server/aircontrol.py ping ${node.address} ${node.channel} ${node.device_id} ${node.role}`
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 
