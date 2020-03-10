@@ -21,7 +21,7 @@ const App = () => {
                 <Switch>
                     <Route path="/admin" render={props => <AdminLayout {...props} />} />
                     <Route path="/auth" render={props => <AuthLayout {...props} />} />
-                    <Redirect from="/" to="/admin/historial-nodos" />
+                    <Redirect from="/" to="/admin/nodos" />
                 </Switch>
             </BrowserRouter>
         </MuiThemeProvider>

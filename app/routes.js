@@ -3,7 +3,6 @@ import Nodes from "views/Nodes.jsx";
 import Node from "views/Node.jsx";
 import Pools from "views/Pools.jsx";
 import Pool from "views/Pool.jsx";
-import HistoryNodes from "views/HistoryNodes"
 import MapNodes from "views/MapNodes"
 import HistoryEvents from "views/HistoryEvents"
 
@@ -23,13 +22,6 @@ var routes = [
     component: Nodes,
     layout: "/admin",
     exact: true
-  },
-  {
-    path: "/historial-nodos",
-    name: "Historial de nodos",
-    icon: "fa fa-node",
-    component: HistoryNodes,
-    layout: "/admin"
   },
   {
     path: "/mapa-nodos",
