@@ -5,10 +5,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         action : {
-            type: Sequelize.ENUM('RUN SCHEDULE', 'STOP SCHEDULE', 'RUN TIMER', 'STOP TIMER', 'GROUP RUN TIMER', 'WRONG STATUS', 'SET SCHEDULE')
+            type: Sequelize.ENUM('RUN SCHEDULE', 'RUN TIMER', 'STOP', 'GET STATUS', 'SET SCHEDULE')
+        },
+        node_status : {
+            type: Sequelize.ENUM('desactivado', 'horario', 'manual', 'detenido', 'error'),
+			comment: "choice"
         },
         status : {
-            type: Sequelize.ENUM('desconectado', 'horario', 'manual', 'detenido'),
+            type: Sequelize.ENUM('success', 'error', 'warning'),
 			comment: "choice"
         },
         node_repr : {

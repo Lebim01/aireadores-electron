@@ -114,7 +114,8 @@ const HistoryEvents = (props) => {
                                             <th>Canal</th>
                                             <th>Fecha</th>
                                             <th>Acción</th>
-                                            <th>Estado</th>
+                                            <th>Estado nodo</th>
+                                            <th>Resultado</th>
                                         </tr>
                                     </thead>
 
@@ -126,6 +127,7 @@ const HistoryEvents = (props) => {
                                                 <td>{row['node.channel']}</td>
                                                 <td>{moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss')}</td>
                                                 <td>{row.action}</td>
+                                                <td>{row.node_status}</td>
                                                 <td>{row.status}</td>
                                             </tr>
                                         )}
