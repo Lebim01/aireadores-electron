@@ -3,13 +3,14 @@ import fs from 'fs'
 import models from 'models'
 import moment from 'moment'
 
-export async function createEvent(node, { action, response, status }){
+export async function createEvent(node, { action, response, node_status, status }){
     const fieldsToCreate = {
         node_id : node.id,
         node_repr : JSON.stringify(node),
         response,
         action,
-        status
+        node_status,
+        status,
     }
     const instance = models.event.build(fieldsToCreate)
     console.log('event created', instance)
@@ -321,7 +322,7 @@ export function statusNode(node_id){
             const { conn, node } = await connectToNode(node_id)
 
             // comando que se ejecuta
-            const shell = `./aireadores-server/aircontrol.py ping ${node.address} ${node.channel} ${node.device_id} ${node.role}`
+            const shell = `./aireadores-server/aircontrol.py status ${node.address} ${node.channel} ${node.device_id} ${node.role}`
             // respuesta esperada para devolver positivo
             const compare = `comando shell`
 
