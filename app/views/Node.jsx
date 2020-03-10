@@ -141,12 +141,11 @@ const Node = ({ match, history }) => {
                 status : displayOutput.fire === 'success'
             }
 
-            if(response.status){
-                await createEvent(data, { status: data.status, action: 'SET SCHEDULE', response: output })
-            }
+            await createEvent(data, { node_status: data.status, action: 'SET SCHEDULE', response: output, status: displayOutput.fire})
 
             return response
         }catch(err){
+            createErrorEvent(data, 'SET SCHEDULE')
             return {
                 status : false,
                 message: err
@@ -220,35 +219,20 @@ const Node = ({ match, history }) => {
 
     /** SSH METHODS */
 
-    const saveStatus = async (status, output, wrong = false) => {
+    const saveStatus = async (status, action, output) => {
         await setDataForm({ ...dataForm, status })
         editPage.current.save(false)
 
-        /**
-         * CREATE EVENT 
-         */
-        let action = 'WRONG_STATUS'
-        if(!wrong){
-            switch(status){
-                case 'desconectado': 
-                    action = 'STOP SCHEDULE'
-                    break;
-                case 'horario': 
-                    action = 'RUN SCHEDULE'
-                    break;
-                case 'detenido': 
-                    action = 'STOP TIMER'
-                    break;
-                case 'manual': 
-                    action = 'RUN TIMER'
-                    break;
-            }
-        }
-        await createEvent(dataForm, { status, action, response: output })
+        await createEvent(dataForm, { 
+            node_status: status,
+            action: action,
+            response: output,
+            status: 'success',
+        })
     }
 
     const outputs = [
-        { out : 'time out for MSG exceeded', display : "Error: El nodo no responde", fire: '' },
+        { out : 'time out for MSG exceeded', display : "Error: El nodo no responde", fire: 'warning' },
         { out : 'STATUS_ERROR', display : "Error fatal: Consultar con soporte", fire: 'error' },
         { out : 'STATUS_OK', display : "Operación ejecutada satisfactoriamente", fire: 'success' }
     ]
@@ -260,10 +244,25 @@ const Node = ({ match, history }) => {
         { status : 'manual', font : 'text-yellow' },
     ]
 
+    const getStatusFromOutput = (output) => {
+        // FIXME copied code from showDisplayOutput
+        let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
+        return displayOutput.fire
+    }
+
     const showDisplayOutput = (output) => {
         let displayOutput = outputs.find(({ out }) => output.includes(out)) || { display : `Output desconocido: ${output}`, fire: 'warning' }
         Swal.fire(displayOutput.display, '', displayOutput.fire)
         return displayOutput.fire === 'success'
+    }
+
+    const createErrorEvent = (data, action) => {
+        createEvent(data, {
+            node_status: data.status,
+            action: action,
+            response: '(no connection)',
+            status: 'error'
+        })
     }
 
     const modalLoading = (title, text, execute) => {
@@ -283,14 +282,18 @@ const Node = ({ match, history }) => {
             return pingNode(dataForm.id)
             .then((output) => {
                 Swal.hideLoading()
-                if(!showDisplayOutput(output)){
-                    saveStatus('desconectado', output)
-                }
+                showDisplayOutput(output)
+                createEvent(dataForm, {
+                    action: 'PING',
+                    response: output,
+                    node_status: dataForm.status,
+                    status: getStatusFromOutput(output),
+                })
             })
             .catch((error) => {
                 Swal.hideLoading()
                 Swal.showValidationMessage(error)
-                saveStatus('desconectado', error, true)
+                createErrorEvent(data, 'PING')
             })
         })
     }
@@ -330,14 +333,19 @@ const Node = ({ match, history }) => {
                             .then((output) => {
                                 if(showDisplayOutput(output)){
                                     devolverEstadoAnterior(minutos, dataForm.status)
-                                    saveStatus('manual', output)
-                                }else{
-                                    saveStatus('desconectado', output, true)
+                                    saveStatus('manual', 'RUN TIMER', output)
+                                } else {
+                                    createEvent(dataForm, {
+                                        action: 'RUN TIMER',
+                                        response: output,
+                                        node_status: dataForm.status,
+                                        status: getStatusFromOutput(output),
+                                    })
                                 }
                             })
                             .catch((error) => {
                                 Swal.showValidationMessage(error)
-                                saveStatus('desconectado', error, true)
+                                createErrorEvent(data, 'RUN TIMER')
                             })
                     })
                 }
@@ -357,14 +365,19 @@ const Node = ({ match, history }) => {
                     return cambiarEstado('desconectado')
                         .then((output) => {
                             if(showDisplayOutput(output)){
-                                saveStatus('desconectado', output)
-                            }else{
-                                saveStatus('desconectado', output, true)
+                                saveStatus('detenido', 'STOP', output)
+                            } else {
+                                createEvent(dataForm, {
+                                    action: 'STOP',
+                                    response: output,
+                                    node_status: dataForm.status,
+                                    status: getStatusFromOutput(output),
+                                })
                             }
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
-                            saveStatus('desconectado', error, true)
+                            createErrorEvent(data, 'STOP')
                         })
                 })
             }
@@ -383,14 +396,19 @@ const Node = ({ match, history }) => {
                     return cambiarEstado('horario')
                         .then((output) => {
                             if(showDisplayOutput(output)){
-                                saveStatus('horario', output)
-                            }else{
-                                saveStatus('desconectado', output, true)
+                                saveStatus('horario', 'RUN SCHEDULE', output)
+                            } else {
+                                createEvent(dataForm, {
+                                    action: 'RUN SCHEDULE',
+                                    response: output,
+                                    node_status: dataForm.status,
+                                    status: getStatusFromOutput(output),
+                                })
                             }
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
-                            saveStatus('desconectado', error, true)
+                            createErrorEvent(data, 'RUN SCHEDULE')
                         })
                 })
             }
@@ -409,14 +427,19 @@ const Node = ({ match, history }) => {
                     return cambiarEstado('detenido')
                         .then((output) => {
                             if(showDisplayOutput(output)){
-                                saveStatus('detenido', output)
+                                saveStatus('detenido', 'STOP', output)
                             }else{
-                                saveStatus('desconectado', output, true)
+                                createEvent(dataForm, {
+                                    action: 'STOP',
+                                    response: output,
+                                    node_status: dataForm.status,
+                                    status: getStatusFromOutput(output),
+                                })
                             }
                         })
                         .catch(error => {
                             Swal.showValidationMessage(error)
-                            saveStatus('desconectado', error, true)
+                            createErrorEvent(data, 'STOP')
                         })
                 })
             }
