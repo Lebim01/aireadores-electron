@@ -43,8 +43,8 @@ module.exports = (sequelize, Sequelize) => {
 			comment: "positive small integer, par"
         },
         status : {
-            type: Sequelize.ENUM('desconectado', 'horario', 'manual', 'detenido'),
-            defaultValue : 'desconectado',
+            type: Sequelize.ENUM('desactivado', 'error', 'horario', 'manual', 'detenido'),
+            defaultValue : 'desactivado',
 			comment: "choice"
         },
         device_id : {
