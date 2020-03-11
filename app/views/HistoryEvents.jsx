@@ -44,6 +44,7 @@ const HistoryEvents = (props) => {
 
     const query = {
         model : 'event',
+        order: [['createdAt', 'DESC']],
         include : [
             { 
                 model : models.node, 
