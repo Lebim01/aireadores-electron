@@ -1,6 +1,7 @@
 import models from 'models'
 import { statusNode, createEvent } from 'helpers/connect-ssh'
 import Swal from 'sweetalert2'
+const { Op } = require('sequelize')
 
 const setIntervalGlobal = require('electron').remote.getGlobal('setInterval')
 
@@ -8,7 +9,14 @@ export function monitor() {
     const getStatus = async () => {
         console.log('getStatus')
         try {
-            const nodes = await models.node.findAll({ raw: true })
+            const nodes = await models.node.findAll({
+                raw: true,
+                where: {
+                    status: {
+                        [Op.notIn]: ['detenido', 'error', 'desactivado'],
+                    }
+                }
+            })
             for(let i in nodes){
                 console.log('nodo')
                 let node = nodes[i]
