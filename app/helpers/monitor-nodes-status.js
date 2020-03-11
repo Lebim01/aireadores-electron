@@ -51,7 +51,7 @@ export function monitor() {
 
     const repeat = async () => {
         await getStatus()
-        await wait(15)
+        await wait(60 * 5)
         repeat()
     }
 
