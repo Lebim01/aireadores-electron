@@ -75,10 +75,8 @@ const HistoryEvents = (props) => {
     const query_node = {
         model : 'node',
         valueName : 'id',
-        labelName : 'device_id',
-        where : {
-            pool_id : where.pool
-        }
+        labelName : 'address',
+        where : where.pool ? {pool_id : where.pool} : null, // Show all nodes where no pool is selected
     } 
 
     return (
