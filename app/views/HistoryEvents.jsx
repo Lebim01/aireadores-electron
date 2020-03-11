@@ -92,7 +92,7 @@ const HistoryEvents = (props) => {
                             <CardBody style={{textAlign:'center'}}>
                                 <Row>
                                     <Col md={{ size: 4, offset: 2 }}>
-                                        <label>Pscina</label>
+                                        <label>Piscina</label>
                                         <Select query={query_pool} value={where.pool} onChange={(e) => setWhere({...where, pool: e.target.value})}>
                                             <option value="">Seleccione</option>
                                         </Select>
