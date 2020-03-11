@@ -1,5 +1,5 @@
 import models from 'models'
-import { statusNode } from 'helpers/connect-ssh'
+import { statusNode, createEvent } from 'helpers/connect-ssh'
 import Swal from 'sweetalert2'
 
 const setIntervalGlobal = require('electron').remote.getGlobal('setInterval')
@@ -13,10 +13,29 @@ export function monitor() {
                 console.log('nodo')
                 let node = nodes[i]
                 console.log(node)
-                let currentStatusNode = await statusNode(node.id)
-                console.log('currentStatusNode', currentStatusNode)
-                //if(node.status !== currentStatusNode)
-                //    Swal.fire(`Nodo con el indentificador #${node.device_id} cambio de estatus ${node.status} a ${currentStatusNode} inesperadamente`, '', 'error')
+                let output = await statusNode(node.id)
+                let response = JSON.parse(output.split('\n')[0])
+
+                console.log(response)
+
+                if (response.status == 'ERROR_NETWORK') {
+                    createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'warning'})
+                    continue
+                }
+
+                let node_statuses = [
+                    {code: 10, name: 'detenido'},
+                    {code: 11, name: 'horario'},
+                    {code: 12, name: 'manual'},
+                ]
+
+                let status = node_statuses.find(status => response.data[0] === status.code )
+
+                console.log(status)
+
+                if (!status || (node.status !== status.name)) {
+                    createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'error'})
+                }
             }
         }
         catch(err){
