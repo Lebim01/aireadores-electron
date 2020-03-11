@@ -43,6 +43,8 @@ export function monitor() {
 
                 if (!status || (node.status !== status.name)) {
                     createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'error'})
+                    node.status = 'error'
+                    await node.save()
                 }
             }
         }
