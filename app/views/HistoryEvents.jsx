@@ -77,7 +77,13 @@ const HistoryEvents = (props) => {
         valueName : 'id',
         labelName : 'address',
         where : where.pool ? {pool_id : where.pool} : null, // Show all nodes where no pool is selected
-    } 
+    }
+
+    const statuses = [
+        { status : 'success', eventStyle: 'text-green' },
+        { status : 'warning', eventStyle: 'bg-yellow' },
+        { status : 'error', eventStyle: 'bg-red' },
+    ]
 
     return (
         <>
@@ -119,7 +125,7 @@ const HistoryEvents = (props) => {
                                     </thead>
 
                                     <tbody>
-                                        {(data || []).map((row, i) => 
+                                        {(data || []).map((row, i) =>
                                             <tr key={i}>
                                                 <td>{row['node.pool.name']}</td>
                                                 <td>{row['node.address']}</td>
@@ -127,17 +133,17 @@ const HistoryEvents = (props) => {
                                                 <td>{moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss')}</td>
                                                 <td>{row.action}</td>
                                                 <td>{row.node_status}</td>
-                                                <td>{row.status}</td>
+                                                <td className={ (statuses.find(v => v.status === row.status) ||  {}).eventStyle}>{row.status}</td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </Table>
-                                <Pagination 
+                                <Pagination
                                     current={page}
-                                    pages={totalPages} 
-                                    setPage={setPage} 
+                                    pages={totalPages}
+                                    setPage={setPage}
                                     perPage={perPage}
-                                    setPaginationOptions={setPaginationOptions} 
+                                    setPaginationOptions={setPaginationOptions}
                                 />
                             </CardBody>
                         </Card>
