@@ -693,19 +693,31 @@ const Node = ({ match, history }) => {
                             <Col xs={12}>
                                 <hr />
                                 <fieldset>
-                                    <legend>Horario</legend>
                                     <Row>
                                         <Col xs={12}>
-                                            <Button block color={'success'} onClick={() => habilitarNodo()} disabled={disabled || dataForm.status === 'horario'}>
-                                                Ejecutar
+                                            <Button block onClick={() => pingNodo()} disabled={disabled}>
+                                                Prueba
                                             </Button>
                                         </Col>
                                     </Row>
+                                    <br/>
                                     <Row>
                                         <Col xs={12}>
-                                            <br/>
                                             <Button block color={'danger'} onClick={() => deshabilitarNodo() } disabled={disabled || dataForm.status === 'detenido'}>
                                                 Detener
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </fieldset>
+                            </Col>
+                            <Col xs={12}>
+                                <hr />
+                                <fieldset>
+                                    <legend>Horario</legend>
+                                    <Row>
+                                        <Col xs={12}>
+                                            <Button block color={'success'} onClick={() => habilitarNodo()} disabled={disabled || dataForm.status !== 'detenido' || dataForm.status === 'error'}>
+                                                Ejecutar
                                             </Button>
                                         </Col>
                                     </Row>
@@ -717,24 +729,8 @@ const Node = ({ match, history }) => {
                                     <legend>Manual</legend>
                                     <Row>
                                         <Col xs={12}>
-                                            <Button block onClick={() => pingNodo()} disabled={disabled}>
-                                                Prueba
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={12}>
-                                            <br/>
-                                            <Button block onClick={() => encenderNodo()} disabled={disabled || dataForm.status === 'manual'} className="bg-yellow">
+                                            <Button block onClick={() => encenderNodo()} disabled={disabled || (dataForm.status !== 'detenido' && dataForm.status !== 'horario' )} className="bg-yellow">
                                                 Encender
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={12}>
-                                            <br/>
-                                            <Button block color={'danger'} onChange={() => apagarNodo()} disabled={disabled || dataForm.status === 'desconectado'}>
-                                                Detener
                                             </Button>
                                         </Col>
                                     </Row>
