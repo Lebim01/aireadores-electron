@@ -79,10 +79,11 @@ const HistoryEvents = (props) => {
         where : where.pool ? {pool_id : where.pool} : null, // Show all nodes where no pool is selected
     }
 
+
     const statuses = [
         { status : 'success', eventStyle: 'text-green' },
-        { status : 'warning', eventStyle: 'bg-yellow' },
-        { status : 'error', eventStyle: 'bg-red' },
+        { status : 'warning', eventStyle: 'bg-yellow text-black-50 font-weight-bold' },
+        { status : 'error', eventStyle: 'bg-orange text-black-50 font-weight-bold' },
     ]
 
     return (
@@ -96,13 +97,13 @@ const HistoryEvents = (props) => {
                             </CardHeader>
                             <CardBody style={{textAlign:'center'}}>
                                 <Row>
-                                    <Col md={{ size: 4, offset: 2 }}>
+                                    <Col md={{ size: 3, offset: 2 }}>
                                         <label>Piscina</label>
                                         <Select query={query_pool} value={where.pool} onChange={(e) => setWhere({...where, pool: e.target.value})}>
                                             <option value="">Seleccione</option>
                                         </Select>
                                     </Col>
-                                    <Col md={4}>
+                                    <Col md={{ size: 3, offset: 2 }}>
                                         <label>Nodo</label>
                                         <Select query={query_node} value={where.node} onChange={(e) => setWhere({...where, node: e.target.value})}>
                                             <option value="">Seleccione</option>
@@ -126,14 +127,14 @@ const HistoryEvents = (props) => {
 
                                     <tbody>
                                         {(data || []).map((row, i) =>
-                                            <tr key={i}>
+                                            <tr className={ row.status === 'error' ? (statuses.find(v => v.status === row.status) ||  {}).eventStyle : ''} key={i}>
                                                 <td>{row['node.pool.name']}</td>
                                                 <td>{row['node.address']}</td>
                                                 <td>{row['node.channel']}</td>
                                                 <td>{moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss')}</td>
                                                 <td>{row.action}</td>
                                                 <td>{row.node_status}</td>
-                                                <td className={ (statuses.find(v => v.status === row.status) ||  {}).eventStyle}>{row.status}</td>
+                                                <td className={ row.status !== 'error' ? (statuses.find(v => v.status === row.status) ||  {}).eventStyle : ''} >{row.status}</td>
                                             </tr>
                                         )}
                                     </tbody>
