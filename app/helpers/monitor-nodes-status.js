@@ -10,7 +10,6 @@ export function monitor() {
         console.log('getStatus')
         try {
             const nodes = await models.node.findAll({
-                raw: true,
                 where: {
                     status: {
                         [Op.notIn]: ['detenido', 'error', 'desactivado'],
@@ -42,9 +41,12 @@ export function monitor() {
                 console.log(status)
 
                 if (!status || (node.status !== status.name)) {
-                    createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'error'})
-                    node.status = 'error'
-                    await node.save()
+                    let old_status = node.status
+                    if(old_status === 'horario'){
+                        node.status = 'error';
+                        await node.save();
+                    }
+                    await createEvent(node, { node_status: old_status, action: 'GET STATUS', response: output, status: 'error'});
                 }
             }
         }
