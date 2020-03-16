@@ -49,7 +49,7 @@ function useAsyncState(initialValue) {
 
 const Node = ({ match, history }) => {
     const editPage = useRef(null)
-    const [dataForm, setDataForm] = useAsyncState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'desconectado' })
+    const [dataForm, setDataForm] = useAsyncState({ address : '', num : 0, channel : '', pool : '', rssi : '', status : 'desactivado' })
     const [disabled, setDisabled] = useState(false) // Disable actions buttons
     const [timers, setTimers] = useState([]) // Visual timers data
     const [timersDeleted, setTimersDeleted] = useState([]) // Visual timers deleted
@@ -238,7 +238,7 @@ const Node = ({ match, history }) => {
     ]
 
     const statuses = [
-        { status : 'desconectado', font : '', method : turnOffNode },
+        { status : 'desactivado', font : '', method : turnOffNode },
         { status : 'horario', font : 'text-success', method : enableProgramNode },
         { status : 'detenido', font : 'text-danger', method : disableNode },
         { status : 'manual', font : 'text-yellow' },
@@ -362,7 +362,7 @@ const Node = ({ match, history }) => {
         }).then(({value}) => {
             if(value){
                 modalLoading('Apagar nodo manualmente', '', () => {
-                    return cambiarEstado('desconectado')
+                    return cambiarEstado('desactivado')
                         .then((output) => {
                             if(showDisplayOutput(output)){
                                 saveStatus('detenido', 'STOP', output)
@@ -449,8 +449,11 @@ const Node = ({ match, history }) => {
     const devolverEstadoAnterior = async (minutos, prevStatus) => {
         globalTimeout(async () => {
             try {
-                await models.node.update({ status: prevStatus }, { where : { id : dataForm.id } })
-                emitter.emit('node-refresh')
+                let node = await models.node.findByPk(dataForm.id)
+                if( node.status !== 'error'){
+                    await models.node.update({ status: prevStatus }, { where : { id : dataForm.id }})
+                    emitter.emit('node-refresh')
+                }
             }
             catch(err){
 
