@@ -19,6 +19,22 @@ const arrayToWhere = (array) => {
 const HistoryEvents = (props) => {
 
     const perPage = 10
+    const [query, setQuery] = useState({
+        model : 'event',
+        order: [['createdAt', 'DESC']],
+        include : [
+            { 
+                model : models.node, 
+                attributes : ['device_id', 'pool_id', 'address', 'channel'], 
+                include : [
+                    { 
+                        model : models.pool, 
+                        attributes : ['name'],
+                    }
+                ]
+            },
+        ]
+    })
     const [totalPages, setTotalPages] = useState(1)
     const [page, setPage] = useState(0)
     const [paginationOptions, setPaginationOptions] = useState({ limit: perPage }) // limit & offset
@@ -39,31 +55,31 @@ const HistoryEvents = (props) => {
     }, [perPage])
 
     useEffect(() => {
+        const query = {
+            model : 'event',
+            order: [['createdAt', 'DESC']],
+            include : [
+                { 
+                    model : models.node, 
+                    attributes : ['device_id', 'pool_id', 'address', 'channel'], 
+                    include : [
+                        { 
+                            model : models.pool, 
+                            attributes : ['name'],
+                        }
+                    ],
+                    where : {
+                        ...(where.pool ? { pool_id : where.pool } : {})
+                    }
+                },
+            ],
+            where : {
+                ...(where.node ? { node_id: where.node } : {})
+            }
+        }
+        setQuery(query)
         refresh()
     }, [paginationOptions, where])
-
-    const query = {
-        model : 'event',
-        order: [['createdAt', 'DESC']],
-        include : [
-            { 
-                model : models.node, 
-                attributes : ['device_id', 'pool_id', 'address', 'channel'], 
-                include : [
-                    { 
-                        model : models.pool, 
-                        attributes : ['name'],
-                    }
-                ],
-                where : {
-                    ...(where.pool ? { pool_id : where.pool } : {})
-                }
-            },
-        ],
-        where : {
-            ...(where.node ? { node_id: where.node } : {})
-        }
-    }
 
     const { data, loading, error, refresh } = useFetchAsync(query)
 

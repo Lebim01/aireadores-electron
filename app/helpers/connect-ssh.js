@@ -5,7 +5,7 @@ import moment from 'moment'
 
 export async function eventIsRepeated(node_id, action, node_status, status){
     let last_node_event_array = await models.event.findAll({
-        where: { node_id: node_id, },
+        where: { node_id },
         order: [['createdAt', 'DESC'],],
     })
 
