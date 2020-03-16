@@ -1,5 +1,5 @@
 import models from 'models'
-import { statusNode, createEvent } from 'helpers/connect-ssh'
+import { statusNode, createEvent, eventIsRepeated } from 'helpers/connect-ssh'
 import Swal from 'sweetalert2'
 const { Op } = require('sequelize')
 
@@ -26,7 +26,7 @@ export function monitor() {
                 console.log(response)
 
                 if (response.status == 'ERROR_NETWORK') {
-                    createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'warning'})
+                    await createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'warning'})
                     continue
                 }
 
@@ -37,14 +37,21 @@ export function monitor() {
                 ]
 
                 let status = node_statuses.find(status => response.data[0] === status.code )
-
                 console.log(status)
 
+                let is_manual_error_repeated = false
                 if (!status || (node.status !== status.name)) {
                     let old_status = node.status
-                    if(old_status === 'horario'){
+
+                    if(old_status === 'manual'){
+                        let is_repeated = await eventIsRepeated(node.id, 'GET STATUS', 'manual', 'error')
+                        if (is_repeated){ is_manual_error_repeated = true }
+                    }
+
+                    if(old_status === 'horario' || is_manual_error_repeated){
                         node.status = 'error';
                         await node.save();
+                        // TODO: updates pages... Node.jxs and Nodes.jxs
                     }
                     await createEvent(node, { node_status: old_status, action: 'GET STATUS', response: output, status: 'error'});
                 }
@@ -64,7 +71,7 @@ export function monitor() {
     const repeat = async () => {
         await getStatus()
         await wait(60 * 5)
-        repeat()
+        await repeat()
     }
 
     repeat()
