@@ -1,6 +1,7 @@
 import models from 'models'
 import { statusNode, createEvent, eventIsRepeated } from 'helpers/connect-ssh'
 import Swal from 'sweetalert2'
+import { refreshNodesScreen } from 'helpers/emitters'
 const { Op } = require('sequelize')
 
 const setIntervalGlobal = require('electron').remote.getGlobal('setInterval')
@@ -52,6 +53,7 @@ export function monitor() {
                         node.status = 'error';
                         await node.save();
                         // TODO: updates pages... Node.jxs and Nodes.jxs
+                        refreshNodesScreen()
                     }
                     await createEvent(node, { node_status: old_status, action: 'GET STATUS', response: output, status: 'error'});
                 }
