@@ -3,18 +3,46 @@ import fs from 'fs'
 import models from 'models'
 import moment from 'moment'
 
-export async function createEvent(node, { action, response, node_status, status }){
-    const fieldsToCreate = {
-        node_id : node.id,
-        node_repr : JSON.stringify(node),
-        response,
-        action,
-        node_status,
-        status,
+export async function eventIsRepeated(node_id, action, node_status, status){
+    let last_node_event_array = await models.event.findAll({
+        where: { node_id: node_id, },
+        order: [['createdAt', 'DESC'],],
+    })
+
+    if(last_node_event_array){
+        let last_node_event = last_node_event_array[0]
+        if( last_node_event.action === action && last_node_event.node_status === node_status && last_node_event.status === status){
+            return true
+        }
     }
-    const instance = models.event.build(fieldsToCreate)
-    console.log('event created', instance)
-    return await instance.save()
+    return false
+}
+
+export async function createEvent(node, { action, response, node_status, status }){
+    let is_error_or_warning = false
+    let is_new = true
+    if (status === 'error' || status === 'warning') is_error_or_warning = true
+
+    if (is_error_or_warning){
+        let is_repeated = false
+        is_repeated = await eventIsRepeated(node.id, action, node_status, status)
+
+        if(is_repeated) is_new = false
+    }
+
+    if (!is_error_or_warning || is_new){
+        const fieldsToCreate = {
+            node_id : node.id,
+            node_repr : JSON.stringify(node),
+            response,
+            action,
+            node_status,
+            status,
+        }
+        const instance = await models.event.build(fieldsToCreate)
+        console.log('event created', instance)
+        return await instance.save()
+    }
 }
 
 export function connectToRasberry(){
