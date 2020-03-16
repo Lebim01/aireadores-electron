@@ -28,6 +28,7 @@ export default function useFetchAsync({ model, ...query }) {
     }
 
     useEffect(() => {
+        console.info('refresh')
         if(query){
             refresh()
         }

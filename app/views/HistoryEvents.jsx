@@ -7,18 +7,13 @@ import sequelize, { where } from 'sequelize'
 import { useFetchAsync } from 'hooks'
 import Select from 'components/SelectAsync'
 
-const arrayToWhere = (array) => {
-    let _where = {}
-    for(let i in array){
-        let [key, value] = array[i]
-        _where[key] = value
-    }
-    return _where
-}
-
 const HistoryEvents = (props) => {
 
     const perPage = 10
+    const [totalPages, setTotalPages] = useState(1)
+    const [page, setPage] = useState(0)
+    const [paginationOptions, setPaginationOptions] = useState({ limit: perPage }) // limit & offset
+    const [where, setWhere] = useState({ pool : '', node : '' })
     const [query, setQuery] = useState({
         model : 'event',
         order: [['createdAt', 'DESC']],
@@ -33,12 +28,9 @@ const HistoryEvents = (props) => {
                     }
                 ]
             },
-        ]
+        ],
+        limit: perPage
     })
-    const [totalPages, setTotalPages] = useState(1)
-    const [page, setPage] = useState(0)
-    const [paginationOptions, setPaginationOptions] = useState({ limit: perPage }) // limit & offset
-    const [where, setWhere] = useState({ pool : '', node : '' })
 
     useEffect(() => {
         const load = async () => {
@@ -75,10 +67,10 @@ const HistoryEvents = (props) => {
             ],
             where : {
                 ...(where.node ? { node_id: where.node } : {})
-            }
+            },
+            ...paginationOptions
         }
         setQuery(query)
-        refresh()
     }, [paginationOptions, where])
 
     const { data, loading, error, refresh } = useFetchAsync(query)

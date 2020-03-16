@@ -8,20 +8,28 @@ const getElementsFromNumber = (num) => {
 
 const _Pagination = ({ pages, current, perPage, ...props }) => {
 
-    useEffect(() => {
-        props.setPaginationOptions({
-            offset : current == 0 ? 0 : (current * perPage),
-            limit : perPage
-        })
-    }, [perPage, current])
+    const changePagination = (page, perPage) => {
+        if(page == 0){
+            props.setPaginationOptions({
+                limit : perPage
+            })
+        }else{
+            props.setPaginationOptions({
+                offset : page * perPage,
+                limit : perPage
+            })
+        }
+    }
 
     const next = (e) => {
         e.preventDefault()
+        changePagination(current+1, perPage)
         if(current+1 < pages) props.setPage(current+1)
     }
 
     const prev = (e) => {
         e.preventDefault()
+        changePagination(current-1, perPage)
         if(current-1 >= 0) props.setPage(current-1)
     }
 
