@@ -9,7 +9,7 @@ import Select from 'components/SelectAsync'
 
 const HistoryEvents = (props) => {
 
-    const perPage = 5
+    const perPage = 10
     const [totalPages, setTotalPages] = useState(1)
     const [page, setPage] = useState(0)
     const [paginationOptions, setPaginationOptions] = useState({ limit: perPage }) // limit & offset
