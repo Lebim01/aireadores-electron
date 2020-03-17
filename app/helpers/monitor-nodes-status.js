@@ -27,6 +27,7 @@ export function monitor() {
                 console.log(response)
 
                 if (response.status == 'ERROR_NETWORK') {
+                    console.log('is error Network')
                     await createEvent(node, { node_status: node.status, action: 'GET STATUS', response: output, status: 'warning'})
                     continue
                 }
@@ -45,11 +46,19 @@ export function monitor() {
                     let old_status = node.status
 
                     if(old_status === 'manual'){
+                        console.log('error status in node: MANUAL')
                         let is_repeated = await eventIsRepeated(node.id, 'GET STATUS', 'manual', 'error')
-                        if (is_repeated){ is_manual_error_repeated = true }
+                        if (is_repeated){
+                            is_manual_error_repeated = true
+                            console.log('is repeated...')
+                        }
+                        else{
+                            console.log('is the first')
+                        }
                     }
 
                     if(old_status === 'horario' || is_manual_error_repeated){
+                        console.log('error!!!')
                         node.status = 'error';
                         await node.save();
                         // TODO: updates pages... Node.jxs and Nodes.jxs
