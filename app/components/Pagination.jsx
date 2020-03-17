@@ -38,10 +38,22 @@ const _Pagination = ({ pages, current, perPage, ...props }) => {
             <PaginationItem>
                 <PaginationLink previous onClick={prev} />
             </PaginationItem>
-            {getElementsFromNumber(pages).map((_, index) => 
-                <PaginationItem active={index==current}>
+            {getElementsFromNumber(2).filter((_, index) => current-(index+1) >= 0).map((_, index) => 
+                <PaginationItem>
                     <PaginationLink>
-                        {index+1}
+                        {current+index}
+                    </PaginationLink>
+                </PaginationItem>
+            )}
+            <PaginationItem active>
+                <PaginationLink>
+                    {current+1}
+                </PaginationLink>
+            </PaginationItem>
+            {getElementsFromNumber(2).filter((_, index) => current+(index+2) <= pages).map((_, index) => 
+                <PaginationItem>
+                    <PaginationLink>
+                        {current+(index+2)}
                     </PaginationLink>
                 </PaginationItem>
             )}
