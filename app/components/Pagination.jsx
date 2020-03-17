@@ -41,7 +41,7 @@ const _Pagination = ({ pages, current, perPage, ...props }) => {
             {getElementsFromNumber(2).filter((_, index) => current-(index+1) >= 0).map((_, index) => 
                 <PaginationItem>
                     <PaginationLink>
-                        {current+index}
+                        {current-(1-index)}
                     </PaginationLink>
                 </PaginationItem>
             )}
