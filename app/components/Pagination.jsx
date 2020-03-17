@@ -3,7 +3,7 @@ import { Pagination, PaginationItem, PaginationLink } from 'reactstrap'
 import { useEffect } from 'react'
 
 const getElementsFromNumber = (num) => {
-    return new Array(num).fill(0)
+    return new Array(num).fill(0).map((_, index) => ({ index }))
 }
 
 const _Pagination = ({ pages, current, perPage, ...props }) => {
@@ -38,10 +38,10 @@ const _Pagination = ({ pages, current, perPage, ...props }) => {
             <PaginationItem>
                 <PaginationLink previous onClick={prev} />
             </PaginationItem>
-            {getElementsFromNumber(2).filter((_, index) => current-(index+1) >= 0).map((_, index) => 
+            {getElementsFromNumber(2).reverse().filter(({ index }) => current-(index+1) >= 0).map(({index}) => 
                 <PaginationItem>
                     <PaginationLink>
-                        {current-(1-index)}
+                        {current+1-(index+1)}
                     </PaginationLink>
                 </PaginationItem>
             )}
